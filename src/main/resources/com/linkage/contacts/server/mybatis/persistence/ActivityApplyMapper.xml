@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ActivityApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ActivityApply" >
+    <id column="activity_id" property="activity_id" jdbcType="INTEGER" />
+    <id column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="apply_time" property="apply_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    activity_id, user_id, apply_time
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from activity_apply
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.linkage.contacts.server.entity.ActivityApplyKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from activity_apply
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ActivityApplyKey" >
+    delete from activity_apply
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from activity_apply
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ActivityApply" >
+    insert into activity_apply (activity_id, user_id, apply_time
+      )
+    values (#{activity_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{apply_time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ActivityApply" >
+    insert into activity_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      activity_id,
+      user_id,
+      <if test="apply_time != null" >
+        apply_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{activity_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      <if test="apply_time != null" >
+        #{apply_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from activity_apply
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update activity_apply
+    <set >
+      <if test="activityApply.activity_id != null" >
+        activity_id = #{activityApply.activity_id,jdbcType=INTEGER},
+      </if>
+      <if test="activityApply.user_id != null" >
+        user_id = #{activityApply.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="activityApply.apply_time != null" >
+        apply_time = #{activityApply.apply_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update activity_apply
+    set activity_id = #{activityApply.activity_id,jdbcType=INTEGER},
+      user_id = #{activityApply.user_id,jdbcType=INTEGER},
+      apply_time = #{activityApply.apply_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ActivityApply" >
+    update activity_apply
+    <set >
+      <if test="apply_time != null" >
+        apply_time = #{apply_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ActivityApply" >
+    update activity_apply
+    set apply_time = #{apply_time,jdbcType=TIMESTAMP}
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.JobExperienceMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.JobExperience" >
+    <id column="experience_id" property="experience_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="startyear" property="startyear" jdbcType="SMALLINT" />
+    <result column="endyear" property="endyear" jdbcType="SMALLINT" />
+    <result column="company_info" property="company_info" jdbcType="VARCHAR" />
+    <result column="experience_secret" property="experience_secret" jdbcType="TINYINT" />
+    <result column="order_num" property="order_num" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    experience_id, user_id, startyear, endyear, company_info, experience_secret, order_num
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from job_experience
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from job_experience
+    where experience_id = #{experience_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from job_experience
+    where experience_id = #{experience_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from job_experience
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.JobExperience" >
+    insert into job_experience (experience_id, user_id, startyear, 
+      endyear, company_info, experience_secret, 
+      order_num)
+    values (#{experience_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{startyear,jdbcType=SMALLINT}, 
+      #{endyear,jdbcType=SMALLINT}, #{company_info,jdbcType=VARCHAR}, #{experience_secret,jdbcType=TINYINT}, 
+      #{order_num,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.JobExperience" >
+    insert into job_experience
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      experience_id,
+      user_id,
+      startyear,
+      endyear,
+      <if test="company_info != null" >
+        company_info,
+      </if>
+      experience_secret,
+      order_num,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{experience_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      #{startyear,jdbcType=TINYINT},
+      #{endyear,jdbcType=TINYINT},
+      <if test="company_info != null" >
+        #{company_info,jdbcType=VARCHAR},
+      </if>
+      #{experience_secret,jdbcType=TINYINT},
+      #{order_num,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from job_experience
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update job_experience
+    <set >
+      <if test="jobExperience.experience_id != null" >
+        experience_id = #{jobExperience.experience_id,jdbcType=INTEGER},
+      </if>
+      <if test="jobExperience.user_id != null" >
+        user_id = #{jobExperience.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="jobExperience.startyear != null" >
+        startyear = #{jobExperience.startyear,jdbcType=SMALLINT},
+      </if>
+      <if test="jobExperience.endyear != null" >
+        endyear = #{jobExperience.endyear,jdbcType=SMALLINT},
+      </if>
+      <if test="jobExperience.company_info != null" >
+        company_info = #{jobExperience.company_info,jdbcType=VARCHAR},
+      </if>
+      <if test="jobExperience.experience_secret != null" >
+        experience_secret = #{jobExperience.experience_secret,jdbcType=TINYINT},
+      </if>
+      <if test="jobExperience.order_num != null" >
+        order_num = #{jobExperience.order_num,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update job_experience
+    set experience_id = #{jobExperience.experience_id,jdbcType=INTEGER},
+      user_id = #{jobExperience.user_id,jdbcType=INTEGER},
+      startyear = #{jobExperience.startyear,jdbcType=SMALLINT},
+      endyear = #{jobExperience.endyear,jdbcType=SMALLINT},
+      company_info = #{jobExperience.company_info,jdbcType=VARCHAR},
+      experience_secret = #{jobExperience.experience_secret,jdbcType=TINYINT},
+      order_num = #{jobExperience.order_num,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.JobExperience" >
+    update job_experience
+    <set >
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="startyear != null" >
+        startyear = #{startyear,jdbcType=SMALLINT},
+      </if>
+      <if test="endyear != null" >
+        endyear = #{endyear,jdbcType=SMALLINT},
+      </if>
+      <if test="company_info != null" >
+        company_info = #{company_info,jdbcType=VARCHAR},
+      </if>
+      <if test="experience_secret != null" >
+        experience_secret = #{experience_secret,jdbcType=TINYINT},
+      </if>
+      <if test="order_num != null" >
+        order_num = #{order_num,jdbcType=INTEGER},
+      </if>
+    </set>
+    where experience_id = #{experience_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.JobExperience" >
+    update job_experience
+    set user_id = #{user_id,jdbcType=INTEGER},
+      startyear = #{startyear,jdbcType=SMALLINT},
+      endyear = #{endyear,jdbcType=SMALLINT},
+      company_info = #{company_info,jdbcType=VARCHAR},
+      experience_secret = #{experience_secret,jdbcType=TINYINT},
+      order_num = #{order_num,jdbcType=INTEGER}
+    where experience_id = #{experience_id,jdbcType=INTEGER}
+  </update>
+</mapper>

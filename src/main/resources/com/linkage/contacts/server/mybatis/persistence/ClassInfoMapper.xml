@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ClassInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ClassInfo" >
+    <id column="class_id" property="class_id" jdbcType="INTEGER" />
+    <result column="college_id" property="college_id" jdbcType="INTEGER" />
+    <result column="university_id" property="university_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="class_name" property="class_name" jdbcType="VARCHAR" />
+    <result column="class_degree" property="class_degree" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="SMALLINT" />
+    <result column="class_state" property="class_state" jdbcType="TINYINT" />
+    <result column="student_num" property="student_num" jdbcType="INTEGER" />
+    <result column="class_pic" property="class_pic" jdbcType="VARCHAR" />
+    <result column="teacher" property="teacher" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ClassInfoResultMap" type="com.linkage.contacts.server.vo.FormClassInfo" >
+    <id column="class_id" property="class_id" jdbcType="INTEGER" />
+    <result column="class_name" property="class_name" jdbcType="VARCHAR" />
+    <result column="admin_name" property="admin_name" jdbcType="VARCHAR" />
+    <result column="student_num" property="student_num" jdbcType="INTEGER" />
+    <result column="student_apply" property="student_apply" jdbcType="INTEGER" />
+    <result column="class_role_state" property="class_role_state" jdbcType="TINYINT" />
+    <result column="class_admin" property="class_admin" jdbcType="TINYINT" />
+    <result column="class_pic" property="class_pic" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ClassCreateInfoResultMap" type="com.linkage.contacts.server.vo.FormClassCreateInfo" >
+    <id column="class_id" property="class_id" jdbcType="INTEGER" />
+    <result column="class_name" property="class_name" jdbcType="VARCHAR" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="create_username" property="create_username" jdbcType="VARCHAR" />
+    <result column="class_state" property="class_state" jdbcType="TINYINT" />
+    <result column="class_pic" property="class_pic" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    class_id, college_id, university_id, user_id, class_name, class_degree, year, class_state, 
+    student_num, class_pic, teacher
+  </sql>
+  
+  <!-- CONCAT(c.year,'级',(select college_name from college_config where college_id=c.college_id),c.class_name) class_name -->
+  <select id="getCreateClassInfo" resultMap="ClassCreateInfoResultMap" parameterType="map">
+  select c.class_id,
+  	c.class_name,
+  	c.user_id,
+	(select user_name from user_info where user_id=c.user_id) create_username,
+	c.class_state,
+	c.class_pic
+  from class_info c
+  where c.class_state in (0,2) and c.user_id=#{user_id,jdbcType=INTEGER} and c.university_id=#{university_id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- CONCAT(c.year,'级',(select college_name from college_config where college_id=c.college_id),c.class_name) class_name, -->
+  <select id="getCreateClassInfoByAdmin" resultMap="ClassCreateInfoResultMap" parameterType="int">
+   select c.class_id,
+  	c.class_name,
+  	c.user_id,
+	(select user_name from user_info where user_id=c.user_id) create_username,
+	c.class_state,
+	c.class_pic
+  from class_info c
+  where c.class_state=0 and c.university_id=#{university_id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 
+  (select group_concat(user_name) from user_info where user_id in (select user_id from class_role_info where class_admin=1 and class_id=cc.class_id)) admin_name,
+  CONCAT(c.year,'级',(select college_name from college_config where college_id=c.college_id),c.class_name) class_name,
+   -->
+  <select id="getClassInfosByUser" resultMap="ClassInfoResultMap" parameterType="map">
+  select cc.class_id,
+  	c.class_name,
+  	(select user_name from user_info where user_id=c.user_id) admin_name,
+	c.student_num,
+	(select count(1) from class_role_info where class_id=c.class_id and class_role_state=0) student_apply,
+	cc.class_role_state,
+	cc.class_admin,
+	c.class_pic
+  from class_role_info cc
+  join class_info c on c.class_id = cc.class_id
+  join user_info u on u.user_id = cc.user_id
+  where cc.user_id=#{user_id,jdbcType=INTEGER} and c.university_id=#{university_id,jdbcType=INTEGER} and c.class_state=1
+  </select>
+  
+  <select id="getClassInfosByAdmin" resultMap="ClassInfoResultMap" parameterType="int">
+  select c.class_id,
+  	c.class_name,
+	(select user_name from user_info where user_id=c.user_id) admin_name,
+	c.student_num,
+	(select count(1) from class_role_info where class_id=c.class_id and class_role_state=0) student_apply,
+	1 class_role_state,
+	1 class_admin,
+	c.class_pic
+  from class_info c
+  where c.class_state=1 and c.university_id=#{university_id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from class_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from class_info
+    where class_id = #{class_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from class_info
+    where class_id = #{class_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from class_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ClassInfo" >
+    insert into class_info (class_id, college_id, university_id, 
+      user_id, class_name, class_degree, 
+      year, class_state, student_num, 
+      class_pic, teacher)
+    values (#{class_id,jdbcType=INTEGER}, #{college_id,jdbcType=INTEGER}, #{university_id,jdbcType=INTEGER}, 
+      #{user_id,jdbcType=INTEGER}, #{class_name,jdbcType=VARCHAR}, #{class_degree,jdbcType=INTEGER}, 
+      #{year,jdbcType=SMALLINT}, #{class_state,jdbcType=TINYINT}, #{student_num,jdbcType=INTEGER}, 
+      #{class_pic,jdbcType=VARCHAR}, #{teacher,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ClassInfo" >
+    insert into class_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      class_id,
+      college_id,
+      university_id,
+      user_id,
+      <if test="class_name != null" >
+        class_name,
+      </if>
+      class_degree,
+      year,
+      class_state,
+      student_num,
+      <if test="class_pic != null" >
+        class_pic,
+      </if>
+      <if test="class_pic != null" >
+        teacher,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{class_id,jdbcType=INTEGER},
+      #{college_id,jdbcType=INTEGER},
+      #{university_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      <if test="class_name != null" >
+        #{class_name,jdbcType=VARCHAR},
+      </if>
+      #{class_degree,jdbcType=INTEGER},
+      #{year,jdbcType=SMALLINT},
+      #{class_state,jdbcType=TINYINT},
+      #{student_num,jdbcType=INTEGER},
+      <if test="class_pic != null" >
+        #{class_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="teacher != null" >
+        #{teacher,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from class_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update class_info
+    <set >
+      <if test="classInfo.class_id != null" >
+        class_id = #{classInfo.class_id,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.college_id != null" >
+        college_id = #{classInfo.college_id,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.university_id != null" >
+        university_id = #{classInfo.university_id,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.user_id != null" >
+        user_id = #{classInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.class_name != null" >
+        class_name = #{classInfo.class_name,jdbcType=VARCHAR},
+      </if>
+      <if test="classInfo.class_degree != null" >
+        class_degree = #{classInfo.class_degree,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.year != null" >
+        year = #{classInfo.year,jdbcType=SMALLINT},
+      </if>
+      <if test="classInfo.class_state != null" >
+        class_state = #{classInfo.class_state,jdbcType=TINYINT},
+      </if>
+      <if test="classInfo.student_num != null" >
+        student_num = #{classInfo.student_num,jdbcType=INTEGER},
+      </if>
+      <if test="classInfo.class_pic != null" >
+        class_pic = #{classInfo.class_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="classInfo.teacher != null" >
+        class_pic = #{classInfo.teacher,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update class_info
+    set class_id = #{classInfo.class_id,jdbcType=INTEGER},
+      college_id = #{classInfo.college_id,jdbcType=INTEGER},
+      university_id = #{classInfo.university_id,jdbcType=INTEGER},
+      user_id = #{classInfo.user_id,jdbcType=INTEGER},
+      class_name = #{classInfo.class_name,jdbcType=VARCHAR},
+      class_degree = #{classInfo.class_degree,jdbcType=INTEGER},
+      year = #{classInfo.year,jdbcType=SMALLINT},
+      class_state = #{classInfo.class_state,jdbcType=TINYINT},
+      student_num = #{classInfo.student_num,jdbcType=INTEGER},
+      class_pic = #{classInfo.class_pic,jdbcType=VARCHAR},
+      teacher = #{classInfo.teacher,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ClassInfo" >
+    update class_info
+    <set >
+      <if test="college_id != null" >
+        college_id = #{college_id,jdbcType=INTEGER},
+      </if>
+      <if test="university_id != null" >
+        university_id = #{university_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="class_name != null" >
+        class_name = #{class_name,jdbcType=VARCHAR},
+      </if>
+      <if test="class_degree != null" >
+        class_degree = #{class_degree,jdbcType=INTEGER},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=SMALLINT},
+      </if>
+      <if test="class_state != null" >
+        class_state = #{class_state,jdbcType=TINYINT},
+      </if>
+      <if test="student_num != null" >
+        student_num = #{student_num,jdbcType=INTEGER},
+      </if>
+      <if test="class_pic != null" >
+        class_pic = #{class_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="teacher != null" >
+        teacher = #{teacher,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where class_id = #{class_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ClassInfo" >
+    update class_info
+    set college_id = #{college_id,jdbcType=INTEGER},
+      university_id = #{university_id,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=INTEGER},
+      class_name = #{class_name,jdbcType=VARCHAR},
+      class_degree = #{class_degree,jdbcType=INTEGER},
+      year = #{year,jdbcType=SMALLINT},
+      class_state = #{class_state,jdbcType=TINYINT},
+      student_num = #{student_num,jdbcType=INTEGER},
+      class_pic = #{class_pic,jdbcType=VARCHAR},
+      teacher = #{teacher,jdbcType=VARCHAR}
+    where class_id = #{class_id,jdbcType=INTEGER}
+  </update>
+</mapper>

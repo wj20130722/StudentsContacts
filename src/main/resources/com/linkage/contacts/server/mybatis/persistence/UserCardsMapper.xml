@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.UserCardsMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.UserCards" >
+    <id column="card_id" property="card_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="store_user_id" property="store_user_id" jdbcType="INTEGER" />
+    <result column="store_time" property="store_time" jdbcType="TIMESTAMP" />
+    <result column="store_state" property="store_state" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    card_id, user_id, store_user_id, store_time, store_state
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_cards
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_cards
+    where card_id = #{card_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user_cards
+    where card_id = #{card_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from user_cards
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.UserCards" >
+    insert into user_cards (card_id, user_id, store_user_id, 
+      store_time, store_state)
+    values (#{card_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{store_user_id,jdbcType=INTEGER}, 
+      #{store_time,jdbcType=TIMESTAMP}, #{store_state,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.UserCards" >
+    insert into user_cards
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      card_id,
+      user_id,
+      store_user_id,
+      <if test="store_time != null" >
+        store_time,
+      </if>
+      store_state,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{card_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      #{store_user_id,jdbcType=INTEGER},
+      <if test="store_time != null" >
+        #{store_time,jdbcType=TIMESTAMP},
+      </if>
+      #{store_state,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from user_cards
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update user_cards
+    <set >
+      <if test="userCards.card_id != null" >
+        card_id = #{userCards.card_id,jdbcType=INTEGER},
+      </if>
+      <if test="userCards.user_id != null" >
+        user_id = #{userCards.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userCards.store_user_id != null" >
+        store_user_id = #{userCards.store_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userCards.store_time != null" >
+        store_time = #{userCards.store_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userCards.store_state != null" >
+        store_state = #{userCards.store_state,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update user_cards
+    set card_id = #{userCards.card_id,jdbcType=INTEGER},
+      user_id = #{userCards.user_id,jdbcType=INTEGER},
+      store_user_id = #{userCards.store_user_id,jdbcType=INTEGER},
+      store_time = #{userCards.store_time,jdbcType=TIMESTAMP},
+      store_state = #{userCards.store_state,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.UserCards" >
+    update user_cards
+    <set >
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="store_user_id != null" >
+        store_user_id = #{store_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="store_time != null" >
+        store_time = #{store_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="store_state != null" >
+        store_state = #{store_state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where card_id = #{card_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.UserCards" >
+    update user_cards
+    set user_id = #{user_id,jdbcType=INTEGER},
+      store_user_id = #{store_user_id,jdbcType=INTEGER},
+      store_time = #{store_time,jdbcType=TIMESTAMP},
+      store_state = #{store_state,jdbcType=TINYINT}
+    where card_id = #{card_id,jdbcType=INTEGER}
+  </update>
+</mapper>

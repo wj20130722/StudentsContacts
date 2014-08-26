@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ReportInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ReportInfo" >
+    <id column="report_id" property="report_id" jdbcType="INTEGER" />
+    <result column="report_user_id" property="report_user_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="report_type_str" property="report_type_str" jdbcType="VARCHAR" />
+    <result column="report_content" property="report_content" jdbcType="VARCHAR" />
+    <result column="report_time" property="report_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    report_id, report_user_id, user_id, report_type_str, report_content, report_time
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from report_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from report_info
+    where report_id = #{report_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from report_info
+    where report_id = #{report_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from report_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ReportInfo" >
+    insert into report_info (report_user_id, user_id, 
+      report_type_str, report_content, report_time
+      )
+    values (#{report_user_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, 
+      #{report_type_str,jdbcType=VARCHAR}, #{report_content,jdbcType=VARCHAR}, #{report_time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ReportInfo" >
+    insert into report_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      report_user_id,
+      user_id,
+      <if test="report_type_str != null" >
+        report_type_str,
+      </if>
+      <if test="report_content != null" >
+        report_content,
+      </if>
+      <if test="report_time != null" >
+        report_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{report_user_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      <if test="report_type_str != null" >
+        #{report_type_str,jdbcType=VARCHAR},
+      </if>
+      <if test="report_content != null" >
+        #{report_content,jdbcType=VARCHAR},
+      </if>
+      <if test="report_time != null" >
+        #{report_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from report_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update report_info
+    <set >
+      <if test="reportInfo.report_id != null" >
+        report_id = #{reportInfo.report_id,jdbcType=INTEGER},
+      </if>
+      <if test="reportInfo.report_user_id != null" >
+        report_user_id = #{reportInfo.report_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="reportInfo.user_id != null" >
+        user_id = #{reportInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="reportInfo.report_type_str != null" >
+        report_type_str = #{reportInfo.report_type_str,jdbcType=VARCHAR},
+      </if>
+      <if test="reportInfo.report_content != null" >
+        report_content = #{reportInfo.report_content,jdbcType=VARCHAR},
+      </if>
+      <if test="reportInfo.report_time != null" >
+        report_time = #{reportInfo.report_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update report_info
+    set report_id = #{reportInfo.report_id,jdbcType=INTEGER},
+      report_user_id = #{reportInfo.report_user_id,jdbcType=INTEGER},
+      user_id = #{reportInfo.user_id,jdbcType=INTEGER},
+      report_type_str = #{reportInfo.report_type_str,jdbcType=VARCHAR},
+      report_content = #{reportInfo.report_content,jdbcType=VARCHAR},
+      report_time = #{reportInfo.report_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ReportInfo" >
+    update report_info
+    <set >
+      <if test="report_user_id != null" >
+        report_user_id = #{report_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="report_type_str != null" >
+        report_type_str = #{report_type_str,jdbcType=VARCHAR},
+      </if>
+      <if test="report_content != null" >
+        report_content = #{report_content,jdbcType=VARCHAR},
+      </if>
+      <if test="report_time != null" >
+        report_time = #{report_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where report_id = #{report_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ReportInfo" >
+    update report_info
+    set report_user_id = #{report_user_id,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=INTEGER},
+      report_type_str = #{report_type_str,jdbcType=VARCHAR},
+      report_content = #{report_content,jdbcType=VARCHAR},
+      report_time = #{report_time,jdbcType=TIMESTAMP}
+    where report_id = #{report_id,jdbcType=INTEGER}
+  </update>
+</mapper>

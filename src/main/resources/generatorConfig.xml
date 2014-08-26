@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+<!-- 配置数据库驱动包 -->
+ <classPathEntry location="C:\Users\wangjie\.m2\repository\mysql\mysql-connector-java\5.1.20\mysql-connector-java-5.1.20.jar" />
+  <context id="context1" targetRuntime="MyBatis3">
+  	<!-- 注释配置 -->
+  	<commentGenerator>
+  		<!-- 是否保留自动生成的注释,true去掉注释,一旦设为ture,代码合并的功能就会有影响 -->
+  		<property name="suppressAllComments" value="true" />
+  		<!-- 是否保留时间的注释,true不保留 -->
+  		<property name="suppressDate" value="true" />
+	</commentGenerator>
+  	<!-- oracle的jdbc链接的配置 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3301/studentcontacts" userId="root" password="root123" />
+    <!-- java类型解析器,允许使用BigDecimal -->
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+    <!-- 代码生成器生成的model类存放的路径 -->
+    <javaModelGenerator targetPackage="com.linkage.contacts.server.entity" targetProject="StudentsContacts/src/main/java">
+    	<property name="enableSubPackages" value="false" />
+    	<property name="trimStrings" value="true" />
+    </javaModelGenerator>
+    <!-- 代码生成器生成的映射文件存放的路径 -->
+    <sqlMapGenerator targetPackage="com.linkage.contacts.server.mybatis.persistence" targetProject="StudentsContacts/src/main/resources">
+    	<property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+    <!-- 代码生成器生成的映射接口存放的路径 -->
+    <javaClientGenerator targetPackage="com.linkage.contacts.server.mybatis.persistence" targetProject="StudentsContacts/src/main/java" type="XMLMAPPER">
+    	<property name="enableSubPackages" value="false" />
+    </javaClientGenerator>
+    <!-- 对应数据库中所需要生成的表的配置 -->
+    
+	<!-- <table schema="dangdang" tableName="d_d_category" domainObjectName="Category">
+    	生成的model属性的命名与数据库对应的属性名保持一致,默认情况下mybatis会将数据库中命名进行转化如parent_id会转成parentId
+       <property name="useActualColumnNames" value="true"/>
+       在insert语句之前生成selectKey元素使得主键能够自动生成
+       <generatedKey column="id" sqlStatement="MySql" identity="true" />
+       定制特定的属性名
+       <columnOverride column="turn" property="turn" />
+       生成时忽略数据库中的某些字段
+      <ignoreColumn column="category_value" />
+      定制生成的java类型
+      <columnOverride column="id" jdbcType="INTEGER" javaType="int"/>
+      <columnOverride column="turn" property="turn" jdbcType="INTEGER" javaType="int"/>
+      <columnOverride column="parent_id" jdbcType="INTEGER" javaType="int"/>
+    </table> -->
+    
+    <!-- <table schema="studentcontacts" tableName="user_info" domainObjectName="UserInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="university_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="college_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="year" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="mail_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="phonenum" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="phonenum_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="qq" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="qq_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="city_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="company_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="department_sercet" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="position_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="super_admin" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="allow_all_act_msg" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="online_status" jdbcType="TINYINT" javaType="int"/>
+    </table> -->
+    
+   <!--  <table schema="studentcontacts" tableName="job_experience" domainObjectName="JobExperience">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="experience_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="startyear" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="endyear" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="experience_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="order_num" jdbcType="INTEGER" javaType="int"/>
+    </table> -->
+    
+   <!--  <table schema="studentcontacts" tableName="skill_info" domainObjectName="SkillInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="skill_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="skill_level" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="skill_secret" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="order_num" jdbcType="INTEGER" javaType="int"/>
+    </table> -->
+   <!--  <table schema="studentcontacts" tableName="class_info" domainObjectName="ClassInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="class_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="college_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="university_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="class_degree" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="year" jdbcType="SMALLINT" javaType="int"/>
+    	<columnOverride column="class_state" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="student_num" jdbcType="INTEGER" javaType="int"/>
+    </table>
+     <table schema="studentcontacts" tableName="class_role_info" domainObjectName="ClassRoleInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="class_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="class_admin" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="class_role_state" jdbcType="TINYINT" javaType="int"/>
+    </table>
+    
+    <table schema="studentcontacts" tableName="aluassociation_config" domainObjectName="AluassociationConfig">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="aluassociation_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="type_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="university_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="aluassociation_state" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="aluassociation_num" jdbcType="INTEGER" javaType="int"/>
+    </table>
+    <table schema="studentcontacts" tableName="aluassociation_role_info" domainObjectName="AluassociationRoleInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="aluassociation_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="aluassociation_admin" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="aluassociation_role_state" jdbcType="TINYINT" javaType="int"/>
+    </table> -->
+     <!-- <table schema="studentcontacts" tableName="activity_info" domainObjectName="ActivityInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="activity_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="university_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="view_times" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="apply_number" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="activity_state" jdbcType="TINYINT" javaType="int"/>
+    	<columnOverride column="activity_desc" jdbcType="VARCHAR" javaType="String"/>
+    	<columnOverride column="his_desc" jdbcType="VARCHAR" javaType="String"/>
+    </table>
+    <table schema="studentcontacts" tableName="activity_pic" domainObjectName="ActivityPic">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="pic_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="activity_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="pic_desc" jdbcType="VARCHAR" javaType="String"/>
+    	<columnOverride column="order_no" jdbcType="INTEGER" javaType="int"/>
+    </table>
+    <table schema="studentcontacts" tableName="activity_his_pic" domainObjectName="ActivityHisPic">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="pic_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="activity_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="pic_desc" jdbcType="VARCHAR" javaType="String"/>
+    	<columnOverride column="order_no" jdbcType="INTEGER" javaType="int"/>
+    </table>
+    <table schema="studentcontacts" tableName="activity_apply" domainObjectName="ActivityApply">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="activity_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    </table> -->
+    <!-- <table schema="studentcontacts" tableName="user_cards" domainObjectName="UserCards">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="card_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="store_user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="store_state" jdbcType="TINYINT" javaType="int"/>
+    </table> -->
+ <!--    <table schema="studentcontacts" tableName="user_push_message" domainObjectName="UserPushMessage">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="push_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="from_user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="to_user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="message" jdbcType="VARCHAR" javaType="String"/>
+    	<columnOverride column="push_state" jdbcType="SMALLINT" javaType="int"/>
+    </table> -->
+   <!--  <table schema="studentcontacts" tableName="system_push_message" domainObjectName="SystemPushMessage">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="system_push_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="message_type_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="from_user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="to_user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="message" jdbcType="VARCHAR" javaType="String"/>
+    	<columnOverride column="push_state" jdbcType="SMALLINT" javaType="int"/>
+    </table> -->
+   <!--  <table schema="studentcontacts" tableName="validation_mail_info" domainObjectName="ValidationMailInfo">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="validate_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="validate_man_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="is_validate" jdbcType="TINYINT" javaType="int"/>
+    </table> -->
+    <!-- <table schema="studentcontacts" tableName="user_feed_back" domainObjectName="UserFeedBack">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="feedback_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="advice" jdbcType="VARCHAR" javaType="String"/>
+    </table> -->
+    <table schema="studentcontacts" tableName="user_message_mark" domainObjectName="UserMessageMark">
+    	<property name="useActualColumnNames" value="true"/>
+    	<columnOverride column="user_id" jdbcType="INTEGER" javaType="int"/>
+    	<columnOverride column="has_message" jdbcType="SMALLINT" javaType="int"/>
+    	<columnOverride column="has_sys_message" jdbcType="SMALLINT" javaType="int"/>
+    </table>
+    
+  </context>
+</generatorConfiguration>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.AluassociationRoleInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.AluassociationRoleInfo" >
+    <id column="aluassociation_id" property="aluassociation_id" jdbcType="INTEGER" />
+    <id column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="aluassociation_admin" property="aluassociation_admin" jdbcType="TINYINT" />
+    <result column="aluassociation_role_state" property="aluassociation_role_state" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    aluassociation_id, user_id, aluassociation_admin, aluassociation_role_state
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from aluassociation_role_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfoKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from aluassociation_role_info
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfoKey" >
+    delete from aluassociation_role_info
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from aluassociation_role_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfo" >
+    insert into aluassociation_role_info (aluassociation_id, user_id, aluassociation_admin, 
+      aluassociation_role_state)
+    values (#{aluassociation_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{aluassociation_admin,jdbcType=TINYINT}, 
+      #{aluassociation_role_state,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfo" >
+    insert into aluassociation_role_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      aluassociation_id,
+      user_id,
+      aluassociation_admin,
+      aluassociation_role_state,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{aluassociation_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      #{aluassociation_admin,jdbcType=TINYINT},
+      #{aluassociation_role_state,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from aluassociation_role_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update aluassociation_role_info
+    <set >
+      <if test="aluassociationRoleInfo.aluassociation_id != null" >
+        aluassociation_id = #{aluassociationRoleInfo.aluassociation_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationRoleInfo.user_id != null" >
+        user_id = #{aluassociationRoleInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationRoleInfo.aluassociation_admin != null" >
+        aluassociation_admin = #{aluassociationRoleInfo.aluassociation_admin,jdbcType=TINYINT},
+      </if>
+      <if test="aluassociationRoleInfo.aluassociation_role_state != null" >
+        aluassociation_role_state = #{aluassociationRoleInfo.aluassociation_role_state,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update aluassociation_role_info
+    set aluassociation_id = #{aluassociationRoleInfo.aluassociation_id,jdbcType=INTEGER},
+      user_id = #{aluassociationRoleInfo.user_id,jdbcType=INTEGER},
+      aluassociation_admin = #{aluassociationRoleInfo.aluassociation_admin,jdbcType=TINYINT},
+      aluassociation_role_state = #{aluassociationRoleInfo.aluassociation_role_state,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfo" >
+    update aluassociation_role_info
+    <set >
+      <if test="aluassociation_admin != null" >
+        aluassociation_admin = #{aluassociation_admin,jdbcType=TINYINT},
+      </if>
+      <if test="aluassociation_role_state != null" >
+        aluassociation_role_state = #{aluassociation_role_state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.AluassociationRoleInfo" >
+    update aluassociation_role_info
+    set aluassociation_admin = #{aluassociation_admin,jdbcType=TINYINT},
+      aluassociation_role_state = #{aluassociation_role_state,jdbcType=TINYINT}
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+      and user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+</mapper>

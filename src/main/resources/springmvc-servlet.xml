@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<!-- 读取配置文件 -->
+	<context:property-placeholder location="classpath:localconfig.properties" />
+
+	<!-- spring-mvc-全局的拦截器 -->
+	<mvc:interceptors>
+		<!-- 对request请求(除了登录注册请求,以及异常处理请求)需要做token验证 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<!-- <mvc:exclude-mapping path="/user"/>
+			<mvc:exclude-mapping path="/authorizations"/> -->
+			<mvc:exclude-mapping path="/user/**"/>
+			<mvc:exclude-mapping path="/error/*"/>
+			<mvc:exclude-mapping path="/activity/**"/>
+			<mvc:exclude-mapping path="/validate/*"/>
+			<mvc:exclude-mapping path="/person/*"/>
+			<mvc:exclude-mapping path="/push/*"/>
+			<bean class="com.linkage.contacts.server.spring.mvc.custom.intercepor.AuthorizationValidationIntercepor"/>
+		</mvc:interceptor> 
+	</mvc:interceptors>
+
+	<!-- 扫描类包，将标注Spring注解的controller类自动转化Bean，同时完成Bean的注入 -->
+	<context:component-scan base-package="com.linkage.contacts.server.core.controller" />
+	
+	<!-- Spring MVC 编程模型 -->
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean class="com.linkage.contacts.server.spring.mvc.custom.resolver.RequestAttributeMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+		<mvc:async-support default-timeout="3000">
+			<mvc:callable-interceptors>
+				<bean class="org.linkage.contacts.server.spring.mvc.async.TimeoutCallableProcessingInterceptor" />
+			</mvc:callable-interceptors>
+		</mvc:async-support>
+	</mvc:annotation-driven>
+	
+	<!-- 文件上传下载 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="maxUploadSize" value="100000000" />
+	</bean>
+	
+	<!-- ViewResolver -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/view/validate/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 总错误处理 -->
+	<!-- http://blog.teamextension.com/ajax-friendly-simplemappingexceptionresolver-1057 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 认证失败异常处理 -->
+				<prop key="com.linkage.contacts.core.exception.ContactException">forward:/contactsapi/error/notauthorization</prop>
+				<!-- 系统内部异常处理 -->
+				<prop key="com.linkage.contacts.core.exception.InternalException">forward:/contactsapi/error/innerexception</prop>
+			</props>
+
+		</property>
+		<property name="statusCodes">
+			<props>
+				<prop key="forward:/contactsapi/error/notauthorization">401</prop>
+				<prop key="forward:/contactsapi/error/innerexception">500</prop>
+			</props>
+		</property>
+		<!-- 默认异常处理的controller -->
+		<property name="defaultErrorView" value="forward:/contactsapi/error/innerexception" />
+		<!-- 默认HTTP的状态码 -->
+		<property name="defaultStatusCode" value="500" />
+	</bean>
+
+
+</beans>

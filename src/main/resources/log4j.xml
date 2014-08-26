@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">  
+  
+<log4j:configuration>  
+  
+ <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+  <param name="Encoding" value="UTF-8" />
+  <layout class="org.apache.log4j.PatternLayout">  
+   <!--<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />-->
+   <param name="ConversionPattern" value="%d %-5p [%t] %m|%c.%M(%L)%n"/>
+  </layout>  
+  
+    
+  <!--限制输出级别-->  
+  <filter class="org.apache.log4j.varia.LevelRangeFilter">  
+   <param name="LevelMax" value="ERROR"/>  
+   <param name="LevelMin" value="TRACE"/>  
+  </filter>  
+ </appender>  
+   
+ <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+  <param name="Encoding" value="UTF-8" />
+  <param name="File" value="/tomcat/logs/contacts-logs/contacts.log"/>
+  <param name="Append" value="true" />
+  <param name="Threshold" value="DEBUG" />
+  <param name="ImmediateFlush" value="true" />
+  <param name="DatePattern" value="'_'yyyy-MM-dd'.log'" />
+  <layout class="org.apache.log4j.PatternLayout">  
+   <param name="ConversionPattern" value="%d %-5p [%t] %m|%c.%M(%L)%n" />  
+  </layout>  
+ </appender>   
+  
+ <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">  
+  <param name="BufferSize" value="256" />  
+  <appender-ref ref="DATABASE" />  
+ </appender>  
+   
+ <!--通过<category></category>的定义可以将各个包中的类日志输出到不同的日志文件中-->  
+ <category name="com.linkage">     
+    <level value="INFO" />   
+  </category>  
+   
+<category name="org.springframework">
+	<level value="DEBUG" />
+</category>
+
+<category name="org.codehaus.jackson">
+	<level value="DEBUG" />
+</category>
+
+<category name="org.apache.ibatis">
+	<level value="DEBUG" />
+</category>
+<!--打印Mybatis的输出sql -->
+<!-- <category name="com.xwtech.wp.mybatis">
+	<level value="DEBUG" />
+</category> -->
+
+<category name="com.linkage.contacts.server.mybatis.persistence">
+	<level value="DEBUG" />
+</category>
+
+<category name="com.linkage.filter.SimpleCacheFilter">
+	<level value="DEBUG" />
+</category>
+
+
+ <root>  
+  <priority value="DEBUG" />
+  <!-- <appender-ref ref="CONSOLE" /> -->
+  <appender-ref ref="FILE" />
+ </root>  
+  
+  
+</log4j:configuration>  

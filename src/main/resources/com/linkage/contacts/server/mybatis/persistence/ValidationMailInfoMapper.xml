@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ValidationMailInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ValidationMailInfo" >
+    <id column="validate_id" property="validate_id" jdbcType="INTEGER" />
+    <result column="validate_man_id" property="validate_man_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="validate_key" property="validate_key" jdbcType="VARCHAR" />
+    <result column="validate_time" property="validate_time" jdbcType="TIMESTAMP" />
+    <result column="is_validate" property="is_validate" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    validate_id, validate_man_id, user_id, validate_key, validate_time, is_validate
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from validation_mail_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from validation_mail_info
+    where validate_id = #{validate_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from validation_mail_info
+    where validate_id = #{validate_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from validation_mail_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ValidationMailInfo" >
+    insert into validation_mail_info (validate_id, validate_man_id, user_id, 
+      validate_key, validate_time, is_validate
+      )
+    values (#{validate_id,jdbcType=INTEGER}, #{validate_man_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, 
+      #{validate_key,jdbcType=VARCHAR}, #{validate_time,jdbcType=TIMESTAMP}, #{is_validate,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ValidationMailInfo" >
+    insert into validation_mail_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      validate_id,
+      validate_man_id,
+      user_id,
+      <if test="validate_key != null" >
+        validate_key,
+      </if>
+      <if test="validate_time != null" >
+        validate_time,
+      </if>
+      is_validate,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{validate_id,jdbcType=INTEGER},
+      #{validate_man_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      <if test="validate_key != null" >
+        #{validate_key,jdbcType=VARCHAR},
+      </if>
+      <if test="validate_time != null" >
+        #{validate_time,jdbcType=TIMESTAMP},
+      </if>
+      #{is_validate,jdbcType=TINYINT},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from validation_mail_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update validation_mail_info
+    <set >
+      <if test="validationMailInfo.validate_id != null" >
+        validate_id = #{validationMailInfo.validate_id,jdbcType=INTEGER},
+      </if>
+      <if test="validationMailInfo.validate_man_id != null" >
+        validate_man_id = #{validationMailInfo.validate_man_id,jdbcType=INTEGER},
+      </if>
+      <if test="validationMailInfo.user_id != null" >
+        user_id = #{validationMailInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="validationMailInfo.validate_key != null" >
+        validate_key = #{validationMailInfo.validate_key,jdbcType=VARCHAR},
+      </if>
+      <if test="validationMailInfo.validate_time != null" >
+        validate_time = #{validationMailInfo.validate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validationMailInfo.is_validate != null" >
+        is_validate = #{validationMailInfo.is_validate,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update validation_mail_info
+    set validate_id = #{validationMailInfo.validate_id,jdbcType=INTEGER},
+      validate_man_id = #{validationMailInfo.validate_man_id,jdbcType=INTEGER},
+      user_id = #{validationMailInfo.user_id,jdbcType=INTEGER},
+      validate_key = #{validationMailInfo.validate_key,jdbcType=VARCHAR},
+      validate_time = #{validationMailInfo.validate_time,jdbcType=TIMESTAMP},
+      is_validate = #{validationMailInfo.is_validate,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ValidationMailInfo" >
+    update validation_mail_info
+    <set >
+      <if test="validate_man_id != null" >
+        validate_man_id = #{validate_man_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="validate_key != null" >
+        validate_key = #{validate_key,jdbcType=VARCHAR},
+      </if>
+      <if test="validate_time != null" >
+        validate_time = #{validate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="is_validate != null" >
+        is_validate = #{is_validate,jdbcType=TINYINT},
+      </if>
+    </set>
+    where validate_id = #{validate_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ValidationMailInfo" >
+    update validation_mail_info
+    set validate_man_id = #{validate_man_id,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=INTEGER},
+      validate_key = #{validate_key,jdbcType=VARCHAR},
+      validate_time = #{validate_time,jdbcType=TIMESTAMP},
+      is_validate = #{is_validate,jdbcType=TINYINT}
+    where validate_id = #{validate_id,jdbcType=INTEGER}
+  </update>
+</mapper>

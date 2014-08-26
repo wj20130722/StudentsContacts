@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ClassCallShareMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ClassCallShare" >
+    <id column="share_id" property="share_id" jdbcType="INTEGER" />
+    <result column="class_id" property="class_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="share_type" property="share_type" jdbcType="SMALLINT" />
+    <result column="share_time" property="share_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    share_id, class_id, user_id, share_type, share_time
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from class_call_share
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from class_call_share
+    where share_id = #{share_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from class_call_share
+    where share_id = #{share_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from class_call_share
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ClassCallShare" >
+    insert into class_call_share (class_id, user_id, 
+      share_type, share_time)
+    values (#{class_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, 
+      #{share_type,jdbcType=SMALLINT}, #{share_time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ClassCallShare" >
+    insert into class_call_share
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      class_id,
+      user_id,
+      share_type,
+      <if test="share_time != null" >
+        share_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{class_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      #{share_type,jdbcType=SMALLINT},
+      <if test="share_time != null" >
+        #{share_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from class_call_share
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update class_call_share
+    <set >
+      <if test="classCallShare.share_id != null" >
+        share_id = #{classCallShare.share_id,jdbcType=INTEGER},
+      </if>
+      <if test="classCallShare.class_id != null" >
+        class_id = #{classCallShare.class_id,jdbcType=INTEGER},
+      </if>
+      <if test="classCallShare.user_id != null" >
+        user_id = #{classCallShare.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="classCallShare.share_type != null" >
+        share_type = #{classCallShare.share_type,jdbcType=SMALLINT},
+      </if>
+      <if test="classCallShare.share_time != null" >
+        share_time = #{classCallShare.share_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update class_call_share
+    set share_id = #{classCallShare.share_id,jdbcType=INTEGER},
+      class_id = #{classCallShare.class_id,jdbcType=INTEGER},
+      user_id = #{classCallShare.user_id,jdbcType=INTEGER},
+      share_type = #{classCallShare.share_type,jdbcType=SMALLINT},
+      share_time = #{classCallShare.share_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ClassCallShare" >
+    update class_call_share
+    <set >
+      <if test="class_id != null" >
+        class_id = #{class_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="share_type != null" >
+        share_type = #{share_type,jdbcType=SMALLINT},
+      </if>
+      <if test="share_time != null" >
+        share_time = #{share_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where share_id = #{share_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ClassCallShare" >
+    update class_call_share
+    set class_id = #{class_id,jdbcType=INTEGER},
+      user_id = #{user_id,jdbcType=INTEGER},
+      share_type = #{share_type,jdbcType=SMALLINT},
+      share_time = #{share_time,jdbcType=TIMESTAMP}
+    where share_id = #{share_id,jdbcType=INTEGER}
+  </update>
+</mapper>

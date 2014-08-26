@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- <properties resource="jdbc.properties"/> -->
+	<!--基本配置 -->
+	<settings>
+		<!-- 延迟加载的配置,按需加载对象属性 -->
+		<setting name="lazyLoadingEnabled" value="false"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<!-- 延迟加载的配置,加载所有懒对象属性  -->
+		<!-- <setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="aggressiveLazyLoading" value="true"/> -->
+	</settings>
+	<!-- 配置实体类的别名 ,方便在映射文件的配置文件中直接引用而不用写类的全路径名-->
+	<!-- 如:com.xwtech.wp.test.entity.Employeeinfo 的别名就是employeeinfo -->
+  <!--  <typeAliases>
+    	<package name="com.xwtech.cpmis.server.entity"/>
+    </typeAliases> -->
+    <!-- 自定义类型转化器 -->
+    <!-- <typeHandlers>
+    	<package name="com.xwtech.common.server.mybatis.custom.typehandler"/>
+    </typeHandlers> -->
+	<!-- mybatis和spring整合后交由spring管理 -->
+  <!--  <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driverClassName}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment> 
+    </environments> -->
+    
+     <!-- <mappers>
+    	<mapper resource="com/xwtech/cpmis/server/mybatis/persistence/EmployeeinfoMapper.xml"/>
+    	<mapper resource="com/xwtech/cpmis/server/mybatis/persistence/PostinfoMapper.xml"/>
+    </mappers> -->
+    <!-- 以下可以自定义拦截器以及类型转化器 -->
+</configuration>

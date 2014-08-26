@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.ActivityInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.ActivityInfo" >
+    <id column="activity_id" property="activity_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="university_id" property="university_id" jdbcType="INTEGER" />
+    <result column="activity_name" property="activity_name" jdbcType="VARCHAR" />
+    <result column="begin_time" property="begin_time" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="view_times" property="view_times" jdbcType="INTEGER" />
+    <result column="apply_time" property="apply_time" jdbcType="TIMESTAMP" />
+    <result column="apply_number" property="apply_number" jdbcType="INTEGER" />
+    <result column="activity_state" property="activity_state" jdbcType="TINYINT" />
+    <result column="activity_pic" property="activity_pic" jdbcType="VARCHAR" />
+    <result column="create_org" property="create_org" jdbcType="VARCHAR" />
+    <result column="activity_desc" property="activity_desc" jdbcType="VARCHAR" />
+    <result column="his_desc" property="his_desc" jdbcType="VARCHAR" />
+    <result column="generate_time" property="generate_time" jdbcType="TIMESTAMP" />
+    <result column="activity_type" property="activity_type" jdbcType="TINYINT" />
+    <result column="activity_url" property="activity_url" jdbcType="VARCHAR" />
+    <result column="begin_time2" property="begin_time2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    activity_id, user_id, university_id, activity_name, begin_time, end_time, address, view_times, 
+    apply_time, apply_number, activity_state, activity_pic, create_org, activity_desc, 
+    his_desc, generate_time , activity_type, activity_url, begin_time2
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from activity_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="getActivityInfo" resultMap="BaseResultMap" parameterType="map">
+  select distinct
+  <include refid="Base_Column_List" />
+  from activity_info
+  where university_id=#{university_id,jdbcType=INTEGER} and (activity_state=1 or (activity_state=0 and (unix_timestamp(now())-unix_timestamp(apply_time)>0)))
+  order by generate_time desc
+  limit ${index},${pagesize}
+  </select>
+  <select id="getActivityInfo2" resultMap="BaseResultMap" parameterType="map">
+  select distinct
+  <include refid="Base_Column_List" />
+  from activity_info
+  where university_id=#{university_id,jdbcType=INTEGER} and (activity_state=1 or (user_id=#{user_id,jdbcType=INTEGER} and activity_state&lt;&gt;7) or (activity_state=0 and (unix_timestamp(now())-unix_timestamp(apply_time)>0))) 
+  order by generate_time desc
+  limit ${index},${pagesize}
+  </select>
+  
+  <select id="getActivityInfo3" resultMap="BaseResultMap" parameterType="map">
+  select distinct
+  <include refid="Base_Column_List" />
+  from activity_info
+  where university_id=#{university_id,jdbcType=INTEGER} and activity_state not in (3,7) or ((activity_state=0 and (unix_timestamp(now())-unix_timestamp(apply_time)>0)))
+  order by generate_time desc
+  limit ${index},${pagesize}
+  </select>
+  
+   <select id="getActivityInfo4" resultMap="BaseResultMap" parameterType="map">
+  select
+  <include refid="Base_Column_List" />
+  from activity_info
+  where university_id=#{university_id,jdbcType=INTEGER} and activity_state=7
+  order by generate_time desc
+  limit ${index},${pagesize}
+  </select>
+  
+  <select id="getMyActivity" resultMap="BaseResultMap" parameterType="map">
+  select distinct ac.*
+  from activity_info ac
+  left outer join activity_apply a on ac.activity_id = a.activity_id 
+  where ac.university_id=#{university_id,jdbcType=INTEGER} and (ac.user_id=#{user_id,jdbcType=INTEGER} or a.user_id=#{user_id,jdbcType=INTEGER})
+  order by ac.generate_time desc
+  limit ${index},${pagesize}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from activity_info
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from activity_info
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from activity_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.ActivityInfo" >
+    insert into activity_info (activity_id, user_id, university_id, 
+      activity_name, begin_time,end_time, address, 
+      view_times, apply_time, apply_number, 
+      activity_state, activity_pic, create_org, 
+      activity_desc, his_desc, generate_time , activity_type, activity_url, begin_time2)
+    values (#{activity_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{university_id,jdbcType=INTEGER}, 
+      #{activity_name,jdbcType=VARCHAR}, #{begin_time,jdbcType=TIMESTAMP},#{end_time,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, 
+      #{view_times,jdbcType=INTEGER}, #{apply_time,jdbcType=TIMESTAMP}, #{apply_number,jdbcType=INTEGER}, 
+      #{activity_state,jdbcType=TINYINT}, #{activity_pic,jdbcType=VARCHAR}, #{create_org,jdbcType=VARCHAR}, 
+      #{activity_desc,jdbcType=VARCHAR}, #{his_desc,jdbcType=VARCHAR}, #{generate_time,jdbcType=TIMESTAMP},
+      #{activity_type,jdbcType=TINYINT}, #{activity_url,jdbcType=VARCHAR}, #{begin_time2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.ActivityInfo" >
+    insert into activity_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      activity_id,
+      user_id,
+      university_id,
+      <if test="activity_name != null" >
+        activity_name,
+      </if>
+      <if test="begin_time != null" >
+        begin_time,
+      </if>
+      <if test="end_time != null" >
+        end_time,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      view_times,
+      <if test="apply_time != null" >
+        apply_time,
+      </if>
+      apply_number,
+      activity_state,
+      <if test="activity_pic != null" >
+        activity_pic,
+      </if>
+      <if test="create_org != null" >
+        create_org,
+      </if>
+      <if test="activity_desc != null" >
+        activity_desc,
+      </if>
+      <if test="his_desc != null" >
+        his_desc,
+      </if>
+      <if test="generate_time != null" >
+        generate_time,
+      </if>
+      activity_type,
+      <if test="activity_url != null" >
+        activity_url,
+      </if>
+      <if test="begin_time2 != null" >
+        begin_time2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{activity_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      #{university_id,jdbcType=INTEGER},
+      <if test="activity_name != null" >
+        #{activity_name,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_time != null" >
+        #{begin_time,jdbcType=TIMESTAMP},
+      </if>
+       <if test="end_time != null" >
+        #{end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      #{view_times,jdbcType=INTEGER},
+      <if test="apply_time != null" >
+        #{apply_time,jdbcType=TIMESTAMP},
+      </if>
+      #{apply_number,jdbcType=INTEGER},
+      #{activity_state,jdbcType=TINYINT},
+      <if test="activity_pic != null" >
+        #{activity_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="create_org != null" >
+        #{create_org,jdbcType=VARCHAR},
+      </if>
+      <if test="activity_desc != null" >
+        #{activity_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="his_desc != null" >
+        #{his_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="generate_time != null" >
+        #{generate_time,jdbcType=TIMESTAMP},
+      </if>
+      #{activity_type,jdbcType=TINYINT},
+      <if test="activity_url != null" >
+        #{activity_url,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_time2 != null" >
+        #{begin_time2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from activity_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update activity_info
+    <set >
+      <if test="activityInfo.activity_id != null" >
+        activity_id = #{activityInfo.activity_id,jdbcType=INTEGER},
+      </if>
+      <if test="activityInfo.user_id != null" >
+        user_id = #{activityInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="activityInfo.university_id != null" >
+        university_id = #{activityInfo.university_id,jdbcType=INTEGER},
+      </if>
+      <if test="activityInfo.activity_name != null" >
+        activity_name = #{activityInfo.activity_name,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.begin_time != null" >
+        begin_time = #{activityInfo.begin_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityInfo.end_time != null" >
+        end_time = #{activityInfo.end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityInfo.address != null" >
+        address = #{activityInfo.address,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.view_times != null" >
+        view_times = #{activityInfo.view_times,jdbcType=INTEGER},
+      </if>
+      <if test="activityInfo.apply_time != null" >
+        apply_time = #{activityInfo.apply_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityInfo.apply_number != null" >
+        apply_number = #{activityInfo.apply_number,jdbcType=INTEGER},
+      </if>
+      <if test="activityInfo.activity_state != null" >
+        activity_state = #{activityInfo.activity_state,jdbcType=TINYINT},
+      </if>
+      <if test="activityInfo.activity_pic != null" >
+        activity_pic = #{activityInfo.activity_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.create_org != null" >
+        create_org = #{activityInfo.create_org,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.activity_desc != null" >
+        activity_desc = #{activityInfo.activity_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.his_desc != null" >
+        his_desc = #{activityInfo.his_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.generate_time != null" >
+        generate_time = #{activityInfo.generate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityInfo.activity_type != null" >
+        activity_type = #{activityInfo.activity_type,jdbcType=TINYINT},
+      </if>
+      <if test="activityInfo.activity_url != null" >
+        activity_url = #{activityInfo.activity_url,jdbcType=VARCHAR},
+      </if>
+      <if test="activityInfo.begin_time2 != null" >
+        begin_time2 = #{activityInfo.begin_time2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update activity_info
+    set activity_id = #{activityInfo.activity_id,jdbcType=INTEGER},
+      user_id = #{activityInfo.user_id,jdbcType=INTEGER},
+      university_id = #{activityInfo.university_id,jdbcType=INTEGER},
+      activity_name = #{activityInfo.activity_name,jdbcType=VARCHAR},
+      begin_time = #{activityInfo.begin_time,jdbcType=TIMESTAMP},
+      end_time = #{activityInfo.end_time,jdbcType=TIMESTAMP},
+      address = #{activityInfo.address,jdbcType=VARCHAR},
+      view_times = #{activityInfo.view_times,jdbcType=INTEGER},
+      apply_time = #{activityInfo.apply_time,jdbcType=TIMESTAMP},
+      apply_number = #{activityInfo.apply_number,jdbcType=INTEGER},
+      activity_state = #{activityInfo.activity_state,jdbcType=TINYINT},
+      activity_pic = #{activityInfo.activity_pic,jdbcType=VARCHAR},
+      create_org = #{activityInfo.create_org,jdbcType=VARCHAR},
+      activity_desc = #{activityInfo.activity_desc,jdbcType=VARCHAR},
+      his_desc = #{activityInfo.his_desc,jdbcType=VARCHAR},
+      generate_time = #{activityInfo.generate_time,jdbcType=TIMESTAMP},
+      activity_type = #{activityInfo.activity_type,jdbcType=TINYINT},
+      activity_url = #{activityInfo.activity_url,jdbcType=VARCHAR},
+      begin_time2 = #{activityInfo.begin_time2,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.ActivityInfo" >
+    update activity_info
+    <set >
+      <if test="user_id != null and user_id != 0" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="university_id != null and university_id !=0" >
+        university_id = #{university_id,jdbcType=INTEGER},
+      </if>
+      <if test="activity_name != null" >
+        activity_name = #{activity_name,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_time != null" >
+        begin_time = #{begin_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end_time != null" >
+        end_time = #{end_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="view_times != null and view_times != 0" >
+        view_times = #{view_times,jdbcType=INTEGER},
+      </if>
+      <if test="apply_time != null" >
+        apply_time = #{apply_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apply_number != null and apply_number != 0" >
+        apply_number = #{apply_number,jdbcType=INTEGER},
+      </if>
+      <if test="activity_state != null and activity_state != 0" >
+        activity_state = #{activity_state,jdbcType=TINYINT},
+      </if>
+      <if test="activity_pic != null" >
+        activity_pic = #{activity_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="create_org != null" >
+        create_org = #{create_org,jdbcType=VARCHAR},
+      </if>
+      <if test="activity_desc != null" >
+        activity_desc = #{activity_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="his_desc != null" >
+        his_desc = #{his_desc,jdbcType=VARCHAR},
+      </if>
+      <if test="generate_time != null" >
+        generate_time = #{generate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activity_type != null and activity_type != 0" >
+        activity_type = #{activity_type,jdbcType=TINYINT},
+      </if>
+      <if test="activity_url != null" >
+        activity_url = #{activity_url,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_time2 != null" >
+        begin_time2 = #{begin_time2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.ActivityInfo" >
+    update activity_info
+    set user_id = #{user_id,jdbcType=INTEGER},
+      university_id = #{university_id,jdbcType=INTEGER},
+      activity_name = #{activity_name,jdbcType=VARCHAR},
+      begin_time = #{begin_time,jdbcType=TIMESTAMP},
+      end_time = #{end_time,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      view_times = #{view_times,jdbcType=INTEGER},
+      apply_time = #{apply_time,jdbcType=TIMESTAMP},
+      apply_number = #{apply_number,jdbcType=INTEGER},
+      activity_state = #{activity_state,jdbcType=TINYINT},
+      activity_pic = #{activity_pic,jdbcType=VARCHAR},
+      create_org = #{create_org,jdbcType=VARCHAR},
+      activity_desc = #{activity_desc,jdbcType=VARCHAR},
+      his_desc = #{his_desc,jdbcType=VARCHAR},
+      generate_time = #{activityInfo.generate_time,jdbcType=TIMESTAMP},
+      activity_type = #{activityInfo.activity_type,jdbcType=TINYINT},
+      activity_url = #{activityInfo.activity_url,jdbcType=VARCHAR},
+      begin_time2 = #{activityInfo.begin_time2,jdbcType=VARCHAR}
+    where activity_id = #{activity_id,jdbcType=INTEGER}
+  </update>
+</mapper>

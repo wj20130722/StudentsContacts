@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.UserInfo" >
+    <id column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="university_id" property="university_id" jdbcType="INTEGER" />
+    <result column="xuehao" property="xuehao" jdbcType="VARCHAR" />
+    <result column="college_id" property="college_id" jdbcType="INTEGER" />
+    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+    <result column="user_sex" property="user_sex" jdbcType="CHAR" />
+    <result column="year" property="year" jdbcType="SMALLINT" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="mail_secret" property="mail_secret" jdbcType="TINYINT" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phonenum" property="phonenum" jdbcType="VARCHAR" />
+    <result column="phonenum_secret" property="phonenum_secret" jdbcType="TINYINT" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="qq_secret" property="qq_secret" jdbcType="TINYINT" />
+    <result column="city_name" property="city_name" jdbcType="VARCHAR" />
+    <result column="city_code" property="city_code" jdbcType="CHAR" />
+    <result column="city_secret" property="city_secret" jdbcType="TINYINT" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="industry_secret" property="industry_secret" jdbcType="TINYINT" />
+    <result column="companyname" property="companyname" jdbcType="VARCHAR" />
+    <result column="company_secret" property="company_secret" jdbcType="TINYINT" />
+    <result column="company_department" property="company_department" jdbcType="VARCHAR" />
+    <result column="department_secret" property="department_secret" jdbcType="TINYINT" />
+    <result column="company_position" property="company_position" jdbcType="VARCHAR" />
+    <result column="position_secret" property="position_secret" jdbcType="TINYINT" />
+    <result column="service_name" property="service_name" jdbcType="VARCHAR" />
+    <result column="service_secret" property="service_secret" jdbcType="TINYINT" />
+    <result column="super_admin" property="super_admin" jdbcType="TINYINT" />
+    <result column="generate_time" property="generate_time" jdbcType="TIMESTAMP" />
+    <result column="allow_all_act_msg" property="allow_all_act_msg" jdbcType="TINYINT" />
+    <result column="avatar_large" property="avatar_large" jdbcType="VARCHAR" />
+    <result column="avatar_hd" property="avatar_hd" jdbcType="VARCHAR" />
+    <result column="online_status" property="online_status" jdbcType="TINYINT" />
+    <result column="access_token" property="access_token" jdbcType="VARCHAR" />
+    <result column="is_authentication" property="is_authentication" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    user_id, university_id, xuehao, college_id, user_name, user_sex, year, mail, mail_secret, 
+    password, phonenum, phonenum_secret, qq, qq_secret, city_name, city_code, city_secret,industry, industry_secret, companyname, 
+    company_secret, company_department, department_secret, company_position, position_secret, service_name, service_secret,
+    super_admin, generate_time, allow_all_act_msg, avatar_large, avatar_hd, online_status, 
+    access_token, is_authentication
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user_info
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from user_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <!-- 保存用户注册信息 -->
+  <insert id="insertUserInfo" parameterType="com.linkage.contacts.server.vo.FormUserInfo">
+  	insert into user_info (user_id, xuehao, user_name, mail, password, year, university_id, generate_time,is_authentication)
+  	values (#{user_id,jdbcType=INTEGER},#{xuehao,jdbcType=VARCHAR},#{user_name,jdbcType=VARCHAR},#{mail,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
+  		#{year,jdbcType=SMALLINT},#{university_id,jdbcType=INTEGER},now(),#{is_authentication,jdbcType=TINYINT})
+  </insert>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.UserInfo" >
+    insert into user_info (user_id, university_id, xuehao, college_id, 
+      user_name, user_sex, year, 
+      mail, mail_secret, password, 
+      phonenum, phonenum_secret, qq, 
+      qq_secret, city_name, city_code, city_secret, industry, industry_secret
+      companyname, company_secret, company_department, 
+      department_secret, company_position, position_secret, service_name, service_secret,
+      super_admin, generate_time, allow_all_act_msg, 
+      avatar_large, avatar_hd, online_status, 
+      access_token, is_authentication)
+    values (#{user_id,jdbcType=INTEGER}, #{university_id,jdbcType=INTEGER}, #{xuehao,jdbcType=VARCHAR}, #{college_id,jdbcType=INTEGER}, 
+      #{user_name,jdbcType=VARCHAR}, #{user_sex,jdbcType=CHAR}, #{year,jdbcType=SMALLINT}, 
+      #{mail,jdbcType=VARCHAR}, #{mail_secret,jdbcType=TINYINT}, #{password,jdbcType=VARCHAR}, 
+      #{phonenum,jdbcType=VARCHAR}, #{phonenum_secret,jdbcType=TINYINT}, #{qq,jdbcType=VARCHAR}, 
+      #{qq_secret,jdbcType=TINYINT}, #{city_name,jdbcType=VARCHAR},#{city_code,jdbcType=CHAR}, #{city_secret,jdbcType=TINYINT}, 
+      #{industry,jdbcType=VARCHAR}, #{industry_secret,jdbcType=TINYINT},#{companyname,jdbcType=VARCHAR}, #{company_secret,jdbcType=TINYINT}, #{company_department,jdbcType=VARCHAR}, 
+      #{department_secret,jdbcType=TINYINT}, #{company_position,jdbcType=VARCHAR}, #{position_secret,jdbcType=TINYINT}, #{service_name,jdbcType=VARCHAR}, #{service_secret,jdbcType=TINYINT}
+      #{super_admin,jdbcType=TINYINT}, #{generate_time,jdbcType=TIMESTAMP}, #{allow_all_act_msg,jdbcType=TINYINT}, 
+      #{avatar_large,jdbcType=VARCHAR}, #{avatar_hd,jdbcType=VARCHAR}, #{online_status,jdbcType=TINYINT}, 
+      #{access_token,jdbcType=VARCHAR}, #{is_authentication,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.UserInfo" >
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      user_id,
+      university_id,
+      <if test="xuehao != null" >
+        xuehao,
+      </if>
+      college_id,
+      <if test="user_name != null" >
+        user_name,
+      </if>
+      <if test="user_sex != null" >
+        user_sex,
+      </if>
+      year,
+      <if test="mail != null" >
+        mail,
+      </if>
+      mail_secret,
+      <if test="password != null" >
+        password,
+      </if>
+     <if test="phonenum != null" >
+        phonenum,
+      </if>
+      phonenum_secret,
+      <if test="qq != null" >
+        qq,
+      </if>
+      qq_secret,
+      <if test="city_name != null" >
+        city_name,
+      </if>
+      <if test="city_code != null" >
+        city_code,
+      </if>
+      city_secret,
+      <if test="industry != null" >
+        industry,
+      </if>
+      industry_secret,
+      <if test="companyname != null" >
+        companyname,
+      </if>
+      company_secret,
+      <if test="company_department != null" >
+        company_department,
+      </if>
+      department_secret,
+      <if test="company_position != null" >
+        company_position,
+      </if>
+      position_secret,
+      <if test="service_name != null" >
+        service_name,
+      </if>
+      service_secret,
+      super_admin,
+      <if test="generate_time != null" >
+        generate_time,
+      </if>
+      allow_all_act_msg,
+      <if test="avatar_large != null" >
+        avatar_large,
+      </if>
+      <if test="avatar_hd != null" >
+        avatar_hd,
+      </if>
+      online_status,
+      <if test="access_token != null" >
+        access_token,
+      </if>
+      is_authentication
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{user_id,jdbcType=INTEGER},
+      #{university_id,jdbcType=INTEGER},
+       <if test="xuehao != null" >
+        #{xuehao,jdbcType=VARCHAR},
+      </if>
+      #{college_id,jdbcType=INTEGER},
+      <if test="user_name != null" >
+        #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_sex != null" >
+        #{user_sex,jdbcType=CHAR},
+      </if>
+      #{year,jdbcType=SMALLINT},
+      <if test="mail != null" >
+        #{mail,jdbcType=VARCHAR},
+      </if>
+      #{mail_secret,jdbcType=TINYINT},
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null" >
+        #{phonenum,jdbcType=VARCHAR},
+      </if>
+      #{phonenum_secret,jdbcType=TINYINT},
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      #{qq_secret,jdbcType=TINYINT},
+      <if test="city_name != null" >
+        #{city_name,jdbcType=VARCHAR},
+      </if>
+      <if test="city_code != null" >
+        #{city_code,jdbcType=VARCHAR},
+      </if>
+      #{city_secret,jdbcType=TINYINT},
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      #{industry_secret,jdbcType=TINYINT},
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      #{company_secret,jdbcType=TINYINT},
+      <if test="company_department != null" >
+        #{company_department,jdbcType=VARCHAR},
+      </if>
+      #{department_secret,jdbcType=TINYINT},
+      <if test="company_position != null" >
+        #{company_position,jdbcType=VARCHAR},
+      </if>
+      #{position_secret,jdbcType=TINYINT},
+      <if test="service_name != null" >
+        #{service_name,jdbcType=VARCHAR},
+      </if>
+      #{service_secret,jdbcType=TINYINT},
+      #{super_admin,jdbcType=TINYINT},
+      <if test="generate_time != null" >
+        #{generate_time,jdbcType=TIMESTAMP},
+      </if>
+      #{allow_all_act_msg,jdbcType=TINYINT},
+      <if test="avatar_large != null" >
+        #{avatar_large,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar_hd != null" >
+        #{avatar_hd,jdbcType=VARCHAR},
+      </if>
+      #{online_status,jdbcType=TINYINT},
+      <if test="access_token != null" >
+        #{access_token,jdbcType=VARCHAR},
+      </if>
+      #{is_authentication,jdbcType=TINYINT}
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from user_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update user_info
+    <set >
+      <if test="userInfo.user_id != null and userInfo.user_id != 0" >
+        user_id = #{userInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userInfo.university_id != null and userInfo.university_id != 0" >
+        university_id = #{userInfo.university_id,jdbcType=INTEGER},
+      </if>
+      <if test="userInfo.xuehao != null" >
+        xuehao = #{userInfo.xuehao,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.college_id != null and userInfo.college_id != 0" >
+        college_id = #{userInfo.college_id,jdbcType=INTEGER},
+      </if>
+      <if test="userInfo.user_name != null" >
+        user_name = #{userInfo.user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.user_sex != null" >
+        user_sex = #{userInfo.user_sex,jdbcType=CHAR},
+      </if>
+      <if test="userInfo.year != null and userInfo.year != 0" >
+        year = #{userInfo.year,jdbcType=SMALLINT},
+      </if>
+      <if test="userInfo.mail != null" >
+        mail = #{userInfo.mail,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.mail_secret != null" >
+        mail_secret = #{userInfo.mail_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.password != null" >
+        password = #{userInfo.password,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.phonenum != null" >
+        phonenum = #{userInfo.phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.phonenum_secret != null" >
+        phonenum_secret = #{userInfo.phonenum_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.qq != null" >
+        qq = #{userInfo.qq,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.qq_secret != null" >
+        qq_secret = #{userInfo.qq_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.city_name != null" >
+        city_code = #{userInfo.city_name,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.city_code != null" >
+        city_code = #{userInfo.city_code,jdbcType=CHAR},
+      </if>
+      <if test="userInfo.city_secret != null" >
+        city_secret = #{userInfo.city_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.industry != null" >
+        industry = #{userInfo.industry,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.industry_secret != null" >
+        industry_secret = #{userInfo.industry_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.companyname != null" >
+        companyname = #{userInfo.companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.company_secret != null" >
+        company_secret = #{userInfo.company_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.company_department != null" >
+        company_department = #{userInfo.company_department,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.department_secret != null" >
+        department_secret = #{userInfo.department_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.company_position != null" >
+        company_position = #{userInfo.company_position,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.position_secret != null" >
+        position_secret = #{userInfo.position_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.service_name != null" >
+        service_name = #{userInfo.service_name,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.service_secret != null" >
+        service_secret = #{userInfo.service_secret,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.super_admin != null" >
+        super_admin = #{userInfo.super_admin,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.generate_time != null" >
+        generate_time = #{userInfo.generate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userInfo.allow_all_act_msg != null" >
+        allow_all_act_msg = #{userInfo.allow_all_act_msg,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.avatar_large != null" >
+        avatar_large = #{userInfo.avatar_large,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.avatar_hd != null" >
+        avatar_hd = #{userInfo.avatar_hd,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.online_status != null" >
+        online_status = #{userInfo.online_status,jdbcType=TINYINT},
+      </if>
+      <if test="userInfo.access_token != null" >
+        access_token = #{userInfo.access_token,jdbcType=VARCHAR},
+      </if>
+      <if test="userInfo.is_authentication != null" >
+        is_authentication = #{userInfo.is_authentication,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateUserInfo" parameterType="com.linkage.contacts.server.vo.FormUserInfo">
+  update user_info
+  set   industry = #{industry,jdbcType=VARCHAR},
+     industry_secret = #{industry_secret,jdbcType=TINYINT},
+  	 companyname = #{companyname,jdbcType=VARCHAR},
+     company_secret = #{company_secret,jdbcType=TINYINT},
+     company_department = #{company_department,jdbcType=VARCHAR},
+     department_secret = #{department_secret,jdbcType=TINYINT},
+     company_position = #{company_position,jdbcType=VARCHAR},
+     position_secret = #{position_secret,jdbcType=TINYINT},
+     service_name = #{service_name,jdbcType=VARCHAR},
+     service_secret = #{service_secret,jdbcType=TINYINT},
+     phonenum = #{phonenum,jdbcType=VARCHAR},
+     phonenum_secret = #{phonenum_secret,jdbcType=TINYINT},
+     qq = #{qq,jdbcType=VARCHAR},
+     qq_secret = #{qq_secret,jdbcType=TINYINT},
+     city_name = #{city_name,jdbcType=VARCHAR},
+     city_code = #{city_code,jdbcType=CHAR},
+     city_secret = #{city_secret,jdbcType=TINYINT},
+     mail_secret = #{mail_secret,jdbcType=TINYINT}
+  	where user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+    <update id="updatePersonalInfo" parameterType="com.linkage.contacts.server.vo.FormUserInfo2">
+	  update user_info
+	  set  industry = #{industry,jdbcType=VARCHAR},
+         industry_secret = #{industry_secret,jdbcType=TINYINT},
+	     companyname = #{companyname,jdbcType=VARCHAR},
+	     company_secret = #{company_secret,jdbcType=TINYINT},
+	     company_department = #{company_department,jdbcType=VARCHAR},
+	     department_secret = #{department_secret,jdbcType=TINYINT},
+	     company_position = #{company_position,jdbcType=VARCHAR},
+	     position_secret = #{position_secret,jdbcType=TINYINT},
+	     service_name = #{service_name,jdbcType=VARCHAR},
+	     service_secret = #{service_secret,jdbcType=TINYINT},
+	     phonenum = #{phonenum,jdbcType=VARCHAR},
+	     phonenum_secret = #{phonenum_secret,jdbcType=TINYINT},
+	     qq = #{qq,jdbcType=VARCHAR},
+	     qq_secret = #{qq_secret,jdbcType=TINYINT},
+	     city_name = #{city_name,jdbcType=VARCHAR},
+	     city_secret = #{city_secret,jdbcType=TINYINT},
+	     mail = #{mail,jdbcType=VARCHAR},
+	     mail_secret = #{mail_secret,jdbcType=TINYINT}
+	  where user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update user_info
+    set user_id = #{userInfo.user_id,jdbcType=INTEGER},
+      university_id = #{userInfo.university_id,jdbcType=INTEGER},
+      xuehao = #{userInfo.xuehao,jdbcType=VARCHAR},
+      college_id = #{userInfo.college_id,jdbcType=INTEGER},
+      user_name = #{userInfo.user_name,jdbcType=VARCHAR},
+      user_sex = #{userInfo.user_sex,jdbcType=CHAR},
+      year = #{userInfo.year,jdbcType=SMALLINT},
+      mail = #{userInfo.mail,jdbcType=VARCHAR},
+      mail_secret = #{userInfo.mail_secret,jdbcType=TINYINT},
+      password = #{userInfo.password,jdbcType=VARCHAR},
+      phonenum = #{userInfo.phonenum,jdbcType=VARCHAR},
+      phonenum_secret = #{userInfo.phonenum_secret,jdbcType=TINYINT},
+      qq = #{userInfo.qq,jdbcType=VARCHAR},
+      qq_secret = #{userInfo.qq_secret,jdbcType=TINYINT},
+      city_name = #{userInfo.city_name,jdbcType=VARCHAR},
+      city_code = #{userInfo.city_code,jdbcType=CHAR},
+      city_secret = #{userInfo.city_secret,jdbcType=TINYINT},
+      industry = #{userInfo.industry,jdbcType=VARCHAR},
+      industry_secret = #{userInfo.industry_secret,jdbcType=TINYINT},
+      companyname = #{userInfo.companyname,jdbcType=VARCHAR},
+      company_secret = #{userInfo.company_secret,jdbcType=TINYINT},
+      company_department = #{userInfo.company_department,jdbcType=VARCHAR},
+      department_secret = #{userInfo.department_secret,jdbcType=TINYINT},
+      company_position = #{userInfo.company_position,jdbcType=VARCHAR},
+      position_secret = #{userInfo.position_secret,jdbcType=TINYINT},
+      service_name = #{userInfo.service_name,jdbcType=VARCHAR},
+      service_secret = #{userInfo.service_secret,jdbcType=TINYINT},
+      super_admin = #{userInfo.super_admin,jdbcType=TINYINT},
+      generate_time = #{userInfo.generate_time,jdbcType=TIMESTAMP},
+      allow_all_act_msg = #{userInfo.allow_all_act_msg,jdbcType=TINYINT},
+      avatar_large = #{userInfo.avatar_large,jdbcType=VARCHAR},
+      avatar_hd = #{userInfo.avatar_hd,jdbcType=VARCHAR},
+      online_status = #{userInfo.online_status,jdbcType=TINYINT},
+      access_token = #{userInfo.access_token,jdbcType=VARCHAR},
+      is_authentication = #{userInfo.is_authentication,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.UserInfo" >
+    update user_info
+    <set >
+      <if test="university_id != null" >
+        university_id = #{university_id,jdbcType=INTEGER},
+      </if>
+      <if test="xuehao != null" >
+        xuehao = #{xuehao,jdbcType=VARCHAR},
+      </if>
+      <if test="college_id != null" >
+        college_id = #{college_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_name != null" >
+        user_name = #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_sex != null" >
+        user_sex = #{user_sex,jdbcType=CHAR},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=SMALLINT},
+      </if>
+      <if test="mail != null" >
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="mail_secret != null" >
+        mail_secret = #{mail_secret,jdbcType=TINYINT},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum != null" >
+        phonenum = #{phonenum,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenum_secret != null" >
+        phonenum_secret = #{phonenum_secret,jdbcType=TINYINT},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="qq_secret != null" >
+        qq_secret = #{qq_secret,jdbcType=TINYINT},
+      </if>
+      <if test="city_name != null" >
+        city_name = #{city_name,jdbcType=VARCHAR},
+      </if>
+      <if test="city_code != null" >
+        city_code = #{city_code,jdbcType=CHAR},
+      </if>
+      <if test="city_secret != null" >
+        city_secret = #{city_secret,jdbcType=TINYINT},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="industry_secret != null" >
+        industry_secret = #{industry_secret,jdbcType=TINYINT},
+      </if>
+      <if test="companyname != null" >
+        companyname = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="company_secret != null" >
+        company_secret = #{company_secret,jdbcType=TINYINT},
+      </if>
+      <if test="company_department != null" >
+        company_department = #{company_department,jdbcType=VARCHAR},
+      </if>
+      <if test="department_secret != null" >
+        department_secret = #{department_secret,jdbcType=TINYINT},
+      </if>
+      <if test="company_position != null" >
+        company_position = #{company_position,jdbcType=VARCHAR},
+      </if>
+      <if test="position_secret != null" >
+        position_secret = #{position_secret,jdbcType=TINYINT},
+      </if>
+      <if test="service_name != null" >
+        service_name = #{service_name,jdbcType=VARCHAR},
+      </if>
+      <if test="service_secret != null" >
+        service_secret = #{service_secret,jdbcType=TINYINT},
+      </if>
+      <if test="super_admin != null" >
+        super_admin = #{super_admin,jdbcType=TINYINT},
+      </if>
+      <if test="generate_time != null" >
+        generate_time = #{generate_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="allow_all_act_msg != null" >
+        allow_all_act_msg = #{allow_all_act_msg,jdbcType=TINYINT},
+      </if>
+      <if test="avatar_large != null" >
+        avatar_large = #{avatar_large,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar_hd != null" >
+        avatar_hd = #{avatar_hd,jdbcType=VARCHAR},
+      </if>
+      <if test="online_status != null" >
+        online_status = #{online_status,jdbcType=TINYINT},
+      </if>
+      <if test="access_token != null" >
+        access_token = #{access_token,jdbcType=VARCHAR},
+      </if>
+      <if test="is_authentication != null" >
+        is_authentication = #{is_authentication,jdbcType=TINYINT},
+      </if>
+    </set>
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.UserInfo" >
+    update user_info
+    set university_id = #{university_id,jdbcType=INTEGER},
+      xuehao = #{xuehao,jdbcType=VARCHAR},
+      college_id = #{college_id,jdbcType=INTEGER},
+      user_name = #{user_name,jdbcType=VARCHAR},
+      user_sex = #{user_sex,jdbcType=CHAR},
+      year = #{year,jdbcType=SMALLINT},
+      mail = #{mail,jdbcType=VARCHAR},
+      mail_secret = #{mail_secret,jdbcType=TINYINT},
+      password = #{password,jdbcType=VARCHAR},
+      phonenum = #{phonenum,jdbcType=VARCHAR},
+      phonenum_secret = #{phonenum_secret,jdbcType=TINYINT},
+      qq = #{qq,jdbcType=VARCHAR},
+      qq_secret = #{qq_secret,jdbcType=TINYINT},
+      city_name = #{city_name,jdbcType=VARCHAR},
+      city_code = #{city_code,jdbcType=CHAR},
+      city_secret = #{city_secret,jdbcType=TINYINT},
+      industry = #{industry,jdbcType=VARCHAR},
+      industry_secret = #{industry_secret,jdbcType=TINYINT},
+      companyname = #{companyname,jdbcType=VARCHAR},
+      company_secret = #{company_secret,jdbcType=TINYINT},
+      company_department = #{company_department,jdbcType=VARCHAR},
+      department_secret = #{department_secret,jdbcType=TINYINT},
+      company_position = #{company_position,jdbcType=VARCHAR},
+      position_secret = #{position_secret,jdbcType=TINYINT},
+      service_name = #{service_name,jdbcType=VARCHAR},
+      service_secret = #{service_secret,jdbcType=TINYINT},
+      super_admin = #{super_admin,jdbcType=TINYINT},
+      generate_time = #{generate_time,jdbcType=TIMESTAMP},
+      allow_all_act_msg = #{allow_all_act_msg,jdbcType=TINYINT},
+      avatar_large = #{avatar_large,jdbcType=VARCHAR},
+      avatar_hd = #{avatar_hd,jdbcType=VARCHAR},
+      online_status = #{online_status,jdbcType=TINYINT},
+      access_token = #{access_token,jdbcType=VARCHAR},
+      is_authentication = #{is_authentication,jdbcType=TINYINT}
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.UserFeedBackMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.UserFeedBack" >
+    <id column="feedback_id" property="feedback_id" jdbcType="INTEGER" />
+    <result column="feedback_time" property="feedback_time" jdbcType="TIMESTAMP" />
+    <result column="advice" property="advice" jdbcType="VARCHAR" />
+    <result column="contacts_way" property="contacts_way" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    feedback_id, feedback_time, advice, contacts_way
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_feed_back
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_feed_back
+    where feedback_id = #{feedback_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user_feed_back
+    where feedback_id = #{feedback_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from user_feed_back
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.UserFeedBack" >
+    insert into user_feed_back (feedback_id, feedback_time, advice, 
+      contacts_way)
+    values (#{feedback_id,jdbcType=INTEGER}, #{feedback_time,jdbcType=TIMESTAMP}, #{advice,jdbcType=VARCHAR}, 
+      #{contacts_way,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.UserFeedBack" >
+    insert into user_feed_back
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      feedback_id,
+      <if test="feedback_time != null" >
+        feedback_time,
+      </if>
+      <if test="advice != null" >
+        advice,
+      </if>
+      <if test="contacts_way != null" >
+        contacts_way,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{feedback_id,jdbcType=INTEGER},
+      <if test="feedback_time != null" >
+        #{feedback_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="advice != null" >
+        #{advice,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts_way != null" >
+        #{contacts_way,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from user_feed_back
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update user_feed_back
+    <set >
+      <if test="userFeedBack.feedback_id != null" >
+        feedback_id = #{userFeedBack.feedback_id,jdbcType=INTEGER},
+      </if>
+      <if test="userFeedBack.feedback_time != null" >
+        feedback_time = #{userFeedBack.feedback_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userFeedBack.advice != null" >
+        advice = #{userFeedBack.advice,jdbcType=VARCHAR},
+      </if>
+      <if test="userFeedBack.contacts_way != null" >
+        contacts_way = #{userFeedBack.contacts_way,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update user_feed_back
+    set feedback_id = #{userFeedBack.feedback_id,jdbcType=INTEGER},
+      feedback_time = #{userFeedBack.feedback_time,jdbcType=TIMESTAMP},
+      advice = #{userFeedBack.advice,jdbcType=VARCHAR},
+      contacts_way = #{userFeedBack.contacts_way,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.UserFeedBack" >
+    update user_feed_back
+    <set >
+      <if test="feedback_time != null" >
+        feedback_time = #{feedback_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="advice != null" >
+        advice = #{advice,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts_way != null" >
+        contacts_way = #{contacts_way,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where feedback_id = #{feedback_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.UserFeedBack" >
+    update user_feed_back
+    set feedback_time = #{feedback_time,jdbcType=TIMESTAMP},
+      advice = #{advice,jdbcType=VARCHAR},
+      contacts_way = #{contacts_way,jdbcType=VARCHAR}
+    where feedback_id = #{feedback_id,jdbcType=INTEGER}
+  </update>
+</mapper>

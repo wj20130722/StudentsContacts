@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.CommonMapper">
+
+	<sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  
+	<select id="getTableColumnValue" resultType="string" parameterType="map">
+	<![CDATA[
+	  select ${columnname}
+	  from ${tablename}
+	  where ${conditionname} = #{conditionvalue}
+	  ]]>
+	</select>
+
+	<select id="getColumnValueBySql" resultType="string" parameterType="string">
+		<![CDATA[
+   		${sql}
+   		]]>
+	</select>
+	<!-- <select id="getColumnValueBySingleCondition" resultType="string" parameterType="map">
+		<![CDATA[
+   		${sql}
+   		]]>
+	</select> -->
+	
+	<select id="getTableRowBySql" resultType="hashmap" parameterType="string">
+		<![CDATA[
+   		${sql}
+   		]]>
+	</select>
+	
+	<!-- <select id="getTableRowBySingleCondition" resultType="hashmap" parameterType="map">
+		<![CDATA[
+   		${sql}
+   		]]>
+	</select> -->
+	
+	<select id="getTableRowByWhereCondition" resultType="hashmap" parameterType="map">
+	 ${sql}
+	<if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+    <if test="criteriaManager.orderByClause != null" >
+      order by ${criteriaManager.orderByClause}
+    </if>
+	</select>
+	
+	<select id="getTableColumnValueByWhereCondition" resultType="string" parameterType="map">
+	 select ${columnname}
+	 from ${tablename}
+	<if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+    <if test="criteriaManager.orderByClause != null" >
+      order by ${criteriaManager.orderByClause}
+    </if>
+	</select>
+	
+	<select id="getTableColumnValueBySql" resultType="string" parameterType="string">
+		<![CDATA[
+   		${sql}
+   		]]>
+	</select>
+	
+	<update id="updateDataBySql" parameterType="string">
+		<![CDATA[
+   			${sql}
+   		]]>
+	</update>
+	
+	<delete id="deleteDataBySql" parameterType="string">
+		<![CDATA[
+	   		${sql}
+	   	]]>
+	</delete>
+	
+	<select id="countByWhereCondition" parameterType="map" resultType="java.lang.Integer" >
+    select count(*) from ${tablename}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </select>
+</mapper>

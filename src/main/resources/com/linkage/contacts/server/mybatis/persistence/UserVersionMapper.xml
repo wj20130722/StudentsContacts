@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.UserVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.UserVersion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version_id" property="version_id" jdbcType="INTEGER" />
+    <result column="version_info" property="version_info" jdbcType="VARCHAR" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="platform" property="platform" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, version_id, version_info, user_id, platform
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_version
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_version
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user_version
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from user_version
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.UserVersion" >
+    insert into user_version (version_id, version_info, user_id, 
+      platform)
+    values (#{version_id,jdbcType=INTEGER}, #{version_info,jdbcType=VARCHAR}, #{user_id,jdbcType=INTEGER}, 
+      #{platform,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.UserVersion" >
+    insert into user_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      version_id,
+      <if test="version_info != null" >
+        version_info,
+      </if>
+      user_id,
+      platform,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{version_id,jdbcType=INTEGER},
+      <if test="version_info != null" >
+        #{version_info,jdbcType=VARCHAR},
+      </if>
+      #{user_id,jdbcType=INTEGER},
+      #{platform,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from user_version
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update user_version
+    <set >
+      <if test="userVersion.id != null" >
+        id = #{userVersion.id,jdbcType=INTEGER},
+      </if>
+      <if test="userVersion.version_id != null" >
+        version_id = #{userVersion.version_id,jdbcType=INTEGER},
+      </if>
+       <if test="userVersion.version_info != null" >
+        version_info = #{userVersion.version_info,jdbcType=VARCHAR},
+      </if>
+      <if test="userVersion.user_id != null" >
+        user_id = #{userVersion.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userVersion.platform != null" >
+        platform = #{userVersion.platform,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update user_version
+    set id = #{userVersion.id,jdbcType=INTEGER},
+      version_id = #{userVersion.version_id,jdbcType=INTEGER},
+      version_info = #{userVersion.version_info,jdbcType=VARCHAR},
+      user_id = #{userVersion.user_id,jdbcType=INTEGER},
+      platform = #{userVersion.platform,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.UserVersion" >
+    update user_version
+    <set >
+      <if test="version_id != null" >
+        version_id = #{version_id,jdbcType=INTEGER},
+      </if>
+      <if test="version_info != null" >
+        version_info = #{version_info,jdbcType=VARCHAR},
+      </if>
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="platform != null" >
+        platform = #{platform,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.UserVersion" >
+    update user_version
+    set version_id = #{version_id,jdbcType=INTEGER},
+      version_info = #{version_info,jdbcType=VARCHAR},
+      user_id = #{user_id,jdbcType=INTEGER},
+      platform = #{platform,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

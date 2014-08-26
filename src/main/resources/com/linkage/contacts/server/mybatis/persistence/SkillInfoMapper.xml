@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.SkillInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.SkillInfo" >
+    <id column="skill_id" property="skill_id" jdbcType="INTEGER" />
+    <result column="user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="skill_name" property="skill_name" jdbcType="VARCHAR" />
+    <result column="skill_level" property="skill_level" jdbcType="INTEGER" />
+    <result column="skill_secret" property="skill_secret" jdbcType="TINYINT" />
+    <result column="order_num" property="order_num" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    skill_id, user_id, skill_name, skill_level, skill_secret, order_num
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from skill_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from skill_info
+    where skill_id = #{skill_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from skill_info
+    where skill_id = #{skill_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from skill_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.SkillInfo" >
+    insert into skill_info (skill_id, user_id, skill_name, 
+      skill_level, skill_secret, order_num
+      )
+    values (#{skill_id,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{skill_name,jdbcType=VARCHAR}, 
+      #{skill_level,jdbcType=INTEGER}, #{skill_secret,jdbcType=TINYINT}, #{order_num,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.SkillInfo" >
+    insert into skill_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      skill_id,
+      user_id,
+      <if test="skill_name != null" >
+        skill_name,
+      </if>
+      skill_level,
+      skill_secret,
+      order_num,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{skill_id,jdbcType=INTEGER},
+      #{user_id,jdbcType=INTEGER},
+      <if test="skill_name != null" >
+        #{skill_name,jdbcType=VARCHAR},
+      </if>
+      #{skill_level,jdbcType=INTEGER},
+      #{skill_secret,jdbcType=TINYINT},
+      #{order_num,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from skill_info
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update skill_info
+    <set >
+      <if test="skillInfo.skill_id != null" >
+        skill_id = #{skillInfo.skill_id,jdbcType=INTEGER},
+      </if>
+      <if test="skillInfo.user_id != null" >
+        user_id = #{skillInfo.user_id,jdbcType=INTEGER},
+      </if>
+      <if test="skillInfo.skill_name != null" >
+        skill_name = #{skillInfo.skill_name,jdbcType=VARCHAR},
+      </if>
+      <if test="skillInfo.skill_level != null" >
+        skill_level = #{skillInfo.skill_level,jdbcType=INTEGER},
+      </if>
+      <if test="skillInfo.skill_secret != null" >
+        skill_secret = #{skillInfo.skill_secret,jdbcType=TINYINT},
+      </if>
+      <if test="skillInfo.order_num != null" >
+        order_num = #{skillInfo.order_num,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update skill_info
+    set skill_id = #{skillInfo.skill_id,jdbcType=INTEGER},
+      user_id = #{skillInfo.user_id,jdbcType=INTEGER},
+      skill_name = #{skillInfo.skill_name,jdbcType=VARCHAR},
+      skill_level = #{skillInfo.skill_level,jdbcType=INTEGER},
+      skill_secret = #{skillInfo.skill_secret,jdbcType=TINYINT},
+      order_num = #{skillInfo.order_num,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.SkillInfo" >
+    update skill_info
+    <set >
+      <if test="user_id != null" >
+        user_id = #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="skill_name != null" >
+        skill_name = #{skill_name,jdbcType=VARCHAR},
+      </if>
+      <if test="skill_level != null" >
+        skill_level = #{skill_level,jdbcType=INTEGER},
+      </if>
+      <if test="skill_secret != null" >
+        skill_secret = #{skill_secret,jdbcType=TINYINT},
+      </if>
+      <if test="order_num != null" >
+        order_num = #{order_num,jdbcType=INTEGER},
+      </if>
+    </set>
+    where skill_id = #{skill_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.SkillInfo" >
+    update skill_info
+    set user_id = #{user_id,jdbcType=INTEGER},
+      skill_name = #{skill_name,jdbcType=VARCHAR},
+      skill_level = #{skill_level,jdbcType=INTEGER},
+      skill_secret = #{skill_secret,jdbcType=TINYINT},
+      order_num = #{order_num,jdbcType=INTEGER}
+    where skill_id = #{skill_id,jdbcType=INTEGER}
+  </update>
+</mapper>

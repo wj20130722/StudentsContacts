@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.UserPushMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.UserPushMessage" >
+    <id column="push_id" property="push_id" jdbcType="INTEGER" />
+    <result column="from_user_id" property="from_user_id" jdbcType="INTEGER" />
+    <result column="to_user_id" property="to_user_id" jdbcType="INTEGER" />
+    <result column="push_time" property="push_time" jdbcType="TIMESTAMP" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="push_state" property="push_state" jdbcType="SMALLINT" />
+  </resultMap>
+  <resultMap id="ContactsResultMap" type="com.linkage.contacts.server.vo.Contacts" >
+  	<id column="push_id" property="push_id" jdbcType="INTEGER" />
+    <result column="from_user_id" property="user_id" jdbcType="INTEGER" />
+    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+    <result column="avatar_large" property="avatar_large" jdbcType="VARCHAR" />
+    <result column="push_time" property="push_time" jdbcType="TIMESTAMP" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    push_id, from_user_id, to_user_id, push_time, message, push_state
+  </sql>
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_push_message
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_push_message
+    where push_id = #{push_id,jdbcType=INTEGER}
+  </select>
+  	<!--  union
+	SELECT * FROM user_push_message_bak where to_user_id= #{user_id,jdbcType=INTEGER} and push_state= 0  -->
+  <select id="getContactsFromUser" resultMap="ContactsResultMap" parameterType="int" >
+    select m.push_id,m.from_user_id,u.user_name,u.avatar_large,m.push_time,m.message
+	from
+	(SELECT * FROM  user_push_message where to_user_id=#{user_id,jdbcType=INTEGER} and push_state=0
+	order by push_time desc) m
+	left join user_info u on u.user_id=m.from_user_id
+	group by m.from_user_id
+	order by m.push_time
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user_push_message
+    where push_id = #{push_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from user_push_message
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.UserPushMessage" >
+    insert into user_push_message (push_id, from_user_id, to_user_id, 
+      push_time, message, push_state
+      )
+    values (#{push_id,jdbcType=INTEGER}, #{from_user_id,jdbcType=INTEGER}, #{to_user_id,jdbcType=INTEGER}, 
+      #{push_time,jdbcType=TIMESTAMP}, #{message,jdbcType=VARCHAR}, #{push_state,jdbcType=SMALLINT}
+      )
+  </insert>
+  
+  <insert id="insertBak" parameterType="map" >
+  <![CDATA[
+    insert into user_push_message_bak 
+    select * from user_push_message
+    where from_user_id=#{from_user_id,jdbcType=INTEGER} and to_user_id=#{to_user_id,jdbcType=INTEGER}  and push_time<=#{timeStr,jdbcType=VARCHAR} and push_state=0
+    ]]>
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.UserPushMessage" >
+    insert into user_push_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      push_id,
+      from_user_id,
+      to_user_id,
+      <if test="push_time != null" >
+        push_time,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      push_state,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{push_id,jdbcType=INTEGER},
+      #{from_user_id,jdbcType=INTEGER},
+      #{to_user_id,jdbcType=INTEGER},
+      <if test="push_time != null" >
+        #{push_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      #{push_state,jdbcType=SMALLINT},
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from user_push_message
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update user_push_message
+    <set >
+      <if test="userPushMessage.push_id != null" >
+        push_id = #{userPushMessage.push_id,jdbcType=INTEGER},
+      </if>
+      <if test="userPushMessage.from_user_id != null" >
+        from_user_id = #{userPushMessage.from_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userPushMessage.to_user_id != null" >
+        to_user_id = #{userPushMessage.to_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="userPushMessage.push_time != null" >
+        push_time = #{userPushMessage.push_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userPushMessage.message != null" >
+        message = #{userPushMessage.message,jdbcType=VARCHAR},
+      </if>
+      <if test="userPushMessage.push_state != null" >
+        push_state = #{userPushMessage.push_state,jdbcType=SMALLINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update user_push_message
+    set push_id = #{userPushMessage.push_id,jdbcType=INTEGER},
+      from_user_id = #{userPushMessage.from_user_id,jdbcType=INTEGER},
+      to_user_id = #{userPushMessage.to_user_id,jdbcType=INTEGER},
+      push_time = #{userPushMessage.push_time,jdbcType=TIMESTAMP},
+      message = #{userPushMessage.message,jdbcType=VARCHAR},
+      push_state = #{userPushMessage.push_state,jdbcType=SMALLINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.UserPushMessage" >
+    update user_push_message
+    <set >
+      <if test="from_user_id != null" >
+        from_user_id = #{from_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="to_user_id != null" >
+        to_user_id = #{to_user_id,jdbcType=INTEGER},
+      </if>
+      <if test="push_time != null" >
+        push_time = #{push_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="push_state != null" >
+        push_state = #{push_state,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where push_id = #{push_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.UserPushMessage" >
+    update user_push_message
+    set from_user_id = #{from_user_id,jdbcType=INTEGER},
+      to_user_id = #{to_user_id,jdbcType=INTEGER},
+      push_time = #{push_time,jdbcType=TIMESTAMP},
+      message = #{message,jdbcType=VARCHAR},
+      push_state = #{push_state,jdbcType=SMALLINT}
+    where push_id = #{push_id,jdbcType=INTEGER}
+  </update>
+</mapper>

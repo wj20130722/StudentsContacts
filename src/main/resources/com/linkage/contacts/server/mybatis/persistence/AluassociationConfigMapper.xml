@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linkage.contacts.server.mybatis.persistence.AluassociationConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.linkage.contacts.server.entity.AluassociationConfig" >
+    <id column="aluassociation_id" property="aluassociation_id" jdbcType="INTEGER" />
+    <result column="type_id" property="type_id" jdbcType="INTEGER" />
+    <result column="aluassociation_name" property="aluassociation_name" jdbcType="VARCHAR" />
+    <result column="province_code" property="province_code" jdbcType="CHAR" />
+    <result column="city_code" property="city_code" jdbcType="CHAR" />
+    <result column="university_id" property="university_id" jdbcType="INTEGER" />
+    <result column="aluassociation_state" property="aluassociation_state" jdbcType="TINYINT" />
+    <result column="aluassociation_num" property="aluassociation_num" jdbcType="INTEGER" />
+    <result column="aluassociation_pic" property="aluassociation_pic" jdbcType="VARCHAR" />
+    <result column="aluassociation_desc" property="aluassociation_desc" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="AluassociationResultMap" type="com.linkage.contacts.server.vo.FormAluassociation" >
+    <id column="aluassociation_id" property="aluassociation_id" jdbcType="INTEGER" />
+    <result column="aluassociation_name" property="aluassociation_name" jdbcType="VARCHAR" />
+    <result column="admin_name" property="admin_name" jdbcType="VARCHAR" />
+    <result column="aluassociation_num" property="aluassociation_num" jdbcType="INTEGER" />
+    <result column="aluassociation_apply" property="aluassociation_apply" jdbcType="INTEGER" />
+    <result column="aluassociation_role_state" property="aluassociation_role_state" jdbcType="TINYINT" />
+    <result column="aluassociation_admin" property="aluassociation_admin" jdbcType="TINYINT" />
+    <result column="aluassociation_pic" property="aluassociation_pic" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Condition_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Condition_Where_Clause" >
+    <where >
+      <foreach collection="criteriaManager.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    aluassociation_id, type_id, aluassociation_name, province_code, city_code, university_id, 
+    aluassociation_state, aluassociation_num, aluassociation_pic, aluassociation_desc
+  </sql>
+  <select id="getAluInfosByUser" resultMap="AluassociationResultMap" parameterType="map">
+  select a.aluassociation_id,
+	aa.aluassociation_name,
+	(select group_concat(user_name) from user_info where user_id in (select user_id from aluassociation_role_info where aluassociation_admin=1 and aluassociation_id=a.aluassociation_id)) admin_name,
+	aa.aluassociation_num,
+	(select count(1) from aluassociation_role_info where aluassociation_id=a.aluassociation_id and aluassociation_role_state=0) aluassociation_apply,
+	a.aluassociation_role_state,
+	a.aluassociation_admin,
+	aa.aluassociation_pic
+  from aluassociation_role_info a
+  join aluassociation_config aa on aa.aluassociation_id=a.aluassociation_id
+  join user_info u on u.user_id=a.user_id
+  where a.user_id=#{user_id,jdbcType=INTEGER} and aa.university_id=#{university_id,jdbcType=INTEGER} and aa.aluassociation_state=1
+  </select>
+  
+  <select id="getAluInfosByAdmin" resultMap="AluassociationResultMap" parameterType="int">
+  select aa.aluassociation_id,
+	aa.aluassociation_name,
+	(select group_concat(user_name) from user_info where user_id in (select user_id from aluassociation_role_info where aluassociation_admin=1 and aluassociation_id=aa.aluassociation_id)) admin_name,
+	aa.aluassociation_num,
+	(select count(1) from aluassociation_role_info where aluassociation_id=aa.aluassociation_id and aluassociation_role_state=0) aluassociation_apply,
+	1 aluassociation_role_state,
+	1 aluassociation_admin,
+	aa.aluassociation_pic
+  from aluassociation_config aa
+  where aa.aluassociation_state=1 and aa.university_id=#{university_id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByWhereCondition" resultMap="BaseResultMap" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from aluassociation_config
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from aluassociation_config
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from aluassociation_config
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" >
+    delete from aluassociation_config
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.linkage.contacts.server.entity.AluassociationConfig" >
+    insert into aluassociation_config (aluassociation_id, type_id, aluassociation_name, 
+      province_code, city_code, university_id, 
+      aluassociation_state, aluassociation_num, 
+      aluassociation_pic, aluassociation_desc)
+    values (#{aluassociation_id,jdbcType=INTEGER}, #{type_id,jdbcType=INTEGER}, #{aluassociation_name,jdbcType=VARCHAR}, 
+      #{province_code,jdbcType=CHAR}, #{city_code,jdbcType=CHAR}, #{university_id,jdbcType=INTEGER}, 
+      #{aluassociation_state,jdbcType=TINYINT}, #{aluassociation_num,jdbcType=INTEGER}, 
+      #{aluassociation_pic,jdbcType=VARCHAR},#{aluassociation_desc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linkage.contacts.server.entity.AluassociationConfig" >
+    insert into aluassociation_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      aluassociation_id,
+      type_id,
+      <if test="aluassociation_name != null" >
+        aluassociation_name,
+      </if>
+      <if test="province_code != null" >
+        province_code,
+      </if>
+      <if test="city_code != null" >
+        city_code,
+      </if>
+      university_id,
+      aluassociation_state,
+      aluassociation_num,
+      <if test="aluassociation_pic != null" >
+        aluassociation_pic,
+      </if>
+      <if test="aluassociation_desc != null" >
+        aluassociation_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{aluassociation_id,jdbcType=INTEGER},
+      #{type_id,jdbcType=INTEGER},
+      <if test="aluassociation_name != null" >
+        #{aluassociation_name,jdbcType=VARCHAR},
+      </if>
+      <if test="province_code != null" >
+        #{province_code,jdbcType=CHAR},
+      </if>
+      <if test="city_code != null" >
+        #{city_code,jdbcType=CHAR},
+      </if>
+      #{university_id,jdbcType=INTEGER},
+      #{aluassociation_state,jdbcType=TINYINT},
+      #{aluassociation_num,jdbcType=INTEGER},
+      <if test="aluassociation_pic != null" >
+        #{aluassociation_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="aluassociation_desc != null" >
+        #{aluassociation_desc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByWhereCondition" parameterType="com.linkage.mybatis.util.CriteriaManager" resultType="java.lang.Integer" >
+    select count(*) from aluassociation_config
+    <if test="_parameter != null" >
+      <include refid="Condition_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByWhereConditionSelective" parameterType="map" >
+    update aluassociation_config
+    <set >
+      <if test="aluassociationConfig.aluassociation_id != null" >
+        aluassociation_id = #{aluassociationConfig.aluassociation_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationConfig.type_id != null" >
+        type_id = #{aluassociationConfig.type_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationConfig.aluassociation_name != null" >
+        aluassociation_name = #{aluassociationConfig.aluassociation_name,jdbcType=VARCHAR},
+      </if>
+      <if test="aluassociationConfig.province_code != null" >
+        province_code = #{aluassociationConfig.province_code,jdbcType=CHAR},
+      </if>
+      <if test="aluassociationConfig.city_code != null" >
+        city_code = #{aluassociationConfig.city_code,jdbcType=CHAR},
+      </if>
+      <if test="aluassociationConfig.university_id != null" >
+        university_id = #{aluassociationConfig.university_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationConfig.aluassociation_state != null" >
+        aluassociation_state = #{aluassociationConfig.aluassociation_state,jdbcType=TINYINT},
+      </if>
+      <if test="aluassociationConfig.aluassociation_num != null" >
+        aluassociation_num = #{aluassociationConfig.aluassociation_num,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociationConfig.aluassociation_pic != null" >
+        aluassociation_pic = #{aluassociationConfig.aluassociation_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="aluassociationConfig.aluassociation_desc != null" >
+        aluassociation_desc = #{aluassociationConfig.aluassociation_desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByWhereCondition" parameterType="map" >
+    update aluassociation_config
+    set aluassociation_id = #{aluassociationConfig.aluassociation_id,jdbcType=INTEGER},
+      type_id = #{aluassociationConfig.type_id,jdbcType=INTEGER},
+      aluassociation_name = #{aluassociationConfig.aluassociation_name,jdbcType=VARCHAR},
+      province_code = #{aluassociationConfig.province_code,jdbcType=CHAR},
+      city_code = #{aluassociationConfig.city_code,jdbcType=CHAR},
+      university_id = #{aluassociationConfig.university_id,jdbcType=INTEGER},
+      aluassociation_state = #{aluassociationConfig.aluassociation_state,jdbcType=TINYINT},
+      aluassociation_num = #{aluassociationConfig.aluassociation_num,jdbcType=INTEGER},
+      aluassociation_pic = #{aluassociationConfig.aluassociation_pic,jdbcType=VARCHAR},
+      aluassociation_desc = #{aluassociationConfig.aluassociation_desc,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Condition_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linkage.contacts.server.entity.AluassociationConfig" >
+    update aluassociation_config
+    <set >
+      <if test="type_id != null" >
+        type_id = #{type_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociation_name != null" >
+        aluassociation_name = #{aluassociation_name,jdbcType=VARCHAR},
+      </if>
+      <if test="province_code != null" >
+        province_code = #{province_code,jdbcType=CHAR},
+      </if>
+      <if test="city_code != null" >
+        city_code = #{city_code,jdbcType=CHAR},
+      </if>
+      <if test="university_id != null" >
+        university_id = #{university_id,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociation_state != null" >
+        aluassociation_state = #{aluassociation_state,jdbcType=TINYINT},
+      </if>
+      <if test="aluassociation_num != null" >
+        aluassociation_num = #{aluassociation_num,jdbcType=INTEGER},
+      </if>
+      <if test="aluassociation_pic != null" >
+        aluassociation_pic = #{aluassociation_pic,jdbcType=VARCHAR},
+      </if>
+      <if test="aluassociation_desc != null" >
+        aluassociation_desc = #{aluassociation_desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linkage.contacts.server.entity.AluassociationConfig" >
+    update aluassociation_config
+    set type_id = #{type_id,jdbcType=INTEGER},
+      aluassociation_name = #{aluassociation_name,jdbcType=VARCHAR},
+      province_code = #{province_code,jdbcType=CHAR},
+      city_code = #{city_code,jdbcType=CHAR},
+      university_id = #{university_id,jdbcType=INTEGER},
+      aluassociation_state = #{aluassociation_state,jdbcType=TINYINT},
+      aluassociation_num = #{aluassociation_num,jdbcType=INTEGER},
+      aluassociation_pic = #{aluassociation_pic,jdbcType=VARCHAR},
+      aluassociation_desc = #{aluassociation_desc,jdbcType=VARCHAR}
+    where aluassociation_id = #{aluassociation_id,jdbcType=INTEGER}
+  </update>
+</mapper>
